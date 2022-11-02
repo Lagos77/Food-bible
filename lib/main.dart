@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foodbible/views/home.dart';
+import 'package:foodbible/mainpage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
         primaryColor: Colors.white,
       ),
-      home: HomePage(),
+      home: MainPage(),
     );
   }
 }
