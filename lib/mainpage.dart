@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodbible/pages/create_recipe.dart';
 import 'package:foodbible/pages/home.dart';
 import 'package:foodbible/pages/test2.dart';
 import 'package:foodbible/pages/test3.dart';
@@ -12,7 +13,7 @@ class _MainPageState extends State<MainPage> {
   int index = 0;
   final switchScreens = [
     HomePage(),
-    Test2(), // Must be replaced with "Create Recipe Widget"
+    CreateRecipePage(), // Must be replaced with "Create Recipe Widget"
     Test3(), // Must be replaced with "Favorite Widget"
   ];
 
