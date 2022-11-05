@@ -1,4 +1,14 @@
 class Recipe {
+
+  String name;
+  List ingredients;
+  String method;
+  List pictures;
+  String prepTime;
+  String cookTime;
+  int servings;
+  String category;
+  
   Recipe(
       {required this.name,
       required this.ingredients,
