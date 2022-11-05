@@ -22,14 +22,18 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   CollectionReference recipies =
       FirebaseFirestore.instance.collection('recipies');
 
-  final recipeRef =
-      FirebaseFirestore.instance.collection('recipies').withConverter<Recipe>(
-            fromFirestore: (snapshot, _) => Recipe.fromJson(snapshot.data()!),
-            toFirestore: (recipe, _) => recipe.toJson(),
-          );
+  // final recipeRef =
+  //     FirebaseFirestore.instance.collection('recipies').withConverter<Recipe>(
+  //           fromFirestore: (snapshot, _) => Recipe.fromJson(snapshot.data()!),
+  //           toFirestore: (recipe, _) => recipe.toJson(),
+  //         );
+
+  Future<void>? test() {
+    print("!!!!!!!");
+    return null;
+  }
 
   Future<void> addRecipe() {
-    // Call the user's CollectionReference to add a new user
     return recipies
         .add({
           "name": "Test",
@@ -41,8 +45,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           "servings": 7,
           "category": "20 minutes"
         })
-        .then((value) => print("Recipe Added"))
-        .catchError((error) => print("Failed to add Recipe: $error"));
+        .then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Recipe added successfully!"),
+            )))
+        .catchError(
+            (error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Failed to add recipe!"),
+                )));
   }
 
   Future<void> updateRecipe() {
@@ -54,7 +63,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   }
 
   Future<void> updateUserAndImage() {
-    // to ipdate image
+    // to update image
     return rootBundle
         .load('assets/images/sample.jpg')
         .then((bytes) => bytes.buffer.asUint8List())
