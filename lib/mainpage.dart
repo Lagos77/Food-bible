@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:foodbible/pages/create_recipe.dart';
 import 'package:foodbible/pages/home.dart';
+import 'package:foodbible/pages/singin.dart';
+import 'package:foodbible/pages/singup.dart';
 import 'package:foodbible/pages/test2.dart';
 import 'package:foodbible/pages/test3.dart';
 
@@ -12,8 +15,10 @@ class _MainPageState extends State<MainPage> {
   int index = 0;
   final switchScreens = [
     HomePage(),
-    Test2(), // Must be replaced with "Create Recipe Widget"
-    Test3(), // Must be replaced with "Favorite Widget"
+    CreateRecipePage(), // Must be replaced with "Create Recipe Widget"
+    SignUp(),
+    SignIn(),
+    // Test3(), // Must be replaced with "Favorite Widget"
   ];
 
   @override
@@ -48,6 +53,11 @@ class _MainPageState extends State<MainPage> {
             icon: Icon(Icons.create),
             selectedIcon: Icon(Icons.create),
             label: "Create recipe",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.app_registration),
+            selectedIcon: Icon(Icons.app_registration),
+            label: "SignUp",
           ),
           NavigationDestination(
             icon: Icon(Icons.favorite),
