@@ -14,7 +14,7 @@ class RecipeCard extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Ink.image(
-            image: NetworkImage(
+            image: const NetworkImage(
                 "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=768,574"),
             colorFilter: ColorFilter.mode(
                 Colors.black.withOpacity(0.3), BlendMode.darken),

@@ -1,24 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:foodbible/mainpage.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Food bible',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.amber,
-        primaryColor: Colors.white,
-      ),
-      home: MainPage(),
+    return FutureBuilder(
+      future: _initialization,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return MaterialApp(
+            title: 'Food bible',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              primarySwatch: Colors.amber,
+              primaryColor: Colors.white,
+            ),
+            home: MainPage(),
+          );
+        } else if (snapshot.hasError) {
+          return MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: Text(
+                  "An error ",
+                  style: TextStyle(
+                      color: Colors.cyan,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          );
+        }
+
+        return MaterialApp(
+          title: 'Food bible',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.amber,
+            primaryColor: Colors.white,
+          ),
+          home: MainPage(),
+        );
+      },
     );
   }
 }

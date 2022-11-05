@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "358807727785",
+    "project_id": "foodbible-c4c31",
+    "storage_bucket": "foodbible-c4c31.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358807727785:android:0e858babcf0958eb7443b8",
+        "android_client_info": {
+          "package_name": "com.example.foodbible"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "358807727785-r29kkcsht8u8s0354tf6ts2a3p715gk0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlfapU1cNE4glGwCoxdcmVWfrJ23Jxcdw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "358807727785-r29kkcsht8u8s0354tf6ts2a3p715gk0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
