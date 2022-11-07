@@ -22,14 +22,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   CollectionReference recipies =
       FirebaseFirestore.instance.collection('recipies');
 
-  final recipeRef =
-      FirebaseFirestore.instance.collection('recipies').withConverter<Recipe>(
-            fromFirestore: (snapshot, _) => Recipe.fromJson(snapshot.data()!),
-            toFirestore: (recipe, _) => recipe.toJson(),
-          );
+  // final recipeRef =
+  //     FirebaseFirestore.instance.collection('recipies').withConverter<Recipe>(
+  //           fromFirestore: (snapshot, _) => Recipe.fromJson(snapshot.data()!),
+  //           toFirestore: (recipe, _) => recipe.toJson(),
+  //         );
 
   Future<void> addRecipe() {
-    // Call the user's CollectionReference to add a new user
     return recipies
         .add({
           "name": "Test",
@@ -39,10 +38,16 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           "prepTime": "20 minutes",
           "cookTime": "20 minutes",
           "servings": 7,
-          "category": "20 minutes"
+          "category": "20 minutes",
+          "userId": "TempUserID" // Toni Fixar userID
         })
-        .then((value) => print("Recipe Added"))
-        .catchError((error) => print("Failed to add Recipe: $error"));
+        .then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Recipe added successfully!"),
+            )))
+        .catchError(
+            (error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Failed to add recipe!"),
+                )));
   }
 
   Future<void> updateRecipe() {
@@ -54,7 +59,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   }
 
   Future<void> updateUserAndImage() {
-    // to ipdate image
+    // to update image
     return rootBundle
         .load('assets/images/sample.jpg')
         .then((bytes) => bytes.buffer.asUint8List())
@@ -83,12 +88,25 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   }
 
   Future<void> getRecipies() {
+    // ignore: deprecated_member_use
+    final listan = <Recipe>[];
+
     return FirebaseFirestore.instance
         .collection('recipies')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        print(doc["name"]);
+        print(doc);
+        listan.add(Recipe(
+            name: doc['name'],
+            ingredients: doc['ingredients'],
+            method: doc['method'],
+            pictures: doc['pictures'],
+            prepTime: doc['prepTime'],
+            cookTime: doc['cookTime'],
+            servings: doc['servings'],
+            category: doc['category'],
+            userId: doc['userId']));
       });
     });
   }

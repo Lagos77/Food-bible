@@ -26,6 +26,12 @@ class _SignInState extends State<SignIn> {
   //         );
 
   Future<void> signInEmailAndPAssword() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Fill in your email and password please!"),
+      ));
+    }
+
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim().toLowerCase(),
@@ -33,10 +39,31 @@ class _SignInState extends State<SignIn> {
       print("Successfully logged in ");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Email address not found!"),
+        ));
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Wrong password provided for this email!"),
+        ));
         print('Wrong password provided for that user.');
       }
+    }
+  }
+
+  Future<void> resetPassword() async {
+    if (_emailController.text == "") {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Fill in your email address!"),
+      ));
+    } else {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+          email: _emailController.text.toLowerCase().trim());
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("An email has been sent to you!"),
+      ));
     }
   }
 
@@ -71,6 +98,14 @@ class _SignInState extends State<SignIn> {
                     },
                     icon: const Icon(Icons.clear)),
                 hintText: "Password"),
+          ),
+          MaterialButton(
+            onPressed: resetPassword,
+            color: Colors.amber,
+            child: const Text(
+              'Forgot Password?',
+              style: TextStyle(color: Colors.black),
+            ),
           ),
           const Spacer(),
           Row(
