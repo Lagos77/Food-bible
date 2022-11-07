@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodbible/views/widgets/recipe_card.dart';
@@ -7,11 +8,25 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-Future<void> signOutEmail() async {
-  await FirebaseAuth.instance.signOut();
-}
-
 class _HomePageState extends State<HomePage> {
+  List<Object> recipeList = [];
+
+  Future getRecipeList() async {
+    await FirebaseFirestore.instance.collection('recipies').get().then(
+          (snapshot) => snapshot.docs.forEach(
+            (document) {
+              recipeList.add(document.reference.id);
+            },
+          ),
+        );
+  }
+
+  @override
+  void initState() {
+    getRecipeList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,15 +35,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MaterialButton(
-              onPressed: signOutEmail,
-              color: Colors.amber,
-              child: const Text(
-                'Sign out',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             TextField(
               decoration: InputDecoration(
                 filled: true,
@@ -36,16 +43,20 @@ class _HomePageState extends State<HomePage> {
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide: BorderSide.none),
-                hintText: "Search for recipies...",
+                hintText: "Search for recipes...",
                 suffixIcon: const Icon(Icons.search),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             Expanded(
-              child: ListView(),
-            )
+              child: FutureBuilder(future: getRecipeList(), builder: (context, snapshot) {
+                return ListView.builder(itemCount: recipeList.length, itemBuilder: (context, index) {
+                    return RecipeCard(title: title, image: image)
+                },);
+              },)
+            ),
           ],
         ),
       ),

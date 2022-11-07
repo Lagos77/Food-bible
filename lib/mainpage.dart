@@ -1,10 +1,11 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodbible/pages/create_recipe.dart';
 import 'package:foodbible/pages/home.dart';
 import 'package:foodbible/pages/singin.dart';
 import 'package:foodbible/pages/singup.dart';
-import 'package:foodbible/pages/test2.dart';
-import 'package:foodbible/pages/test3.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -21,6 +22,10 @@ class _MainPageState extends State<MainPage> {
     // Test3(), // Must be replaced with "Favorite Widget"
   ];
 
+  Future<void> signOutEmail() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +40,22 @@ class _MainPageState extends State<MainPage> {
             Text('Food Bible')
           ],
         ),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              // Add more items to the menu if needed
+              PopupMenuItem(
+                child: Row(
+                  children: const [Icon(Icons.logout), Text("Sign Out")],
+                ),
+                onTap: () {
+                  // Add function for logout
+                  //signOutEmail();
+                },
+              ),
+            ],
+          )
+        ],
       ),
       body: switchScreens[index],
       bottomNavigationBar: NavigationBar(

@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
             home: MainPage(),
           );
         } else if (snapshot.hasError) {
-          return MaterialApp(
+          return const MaterialApp(
             home: Scaffold(
               body: Center(
                 child: Text(
