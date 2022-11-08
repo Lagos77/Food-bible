@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:foodbible/pages/recipe_detail.dart';
 import 'package:foodbible/views/widgets/recipe_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,7 +24,7 @@ class _HomePageState extends State<HomePage> {
         );
   }
 
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
