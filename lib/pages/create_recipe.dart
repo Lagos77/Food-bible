@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foodbible/models/constants.dart';
 import 'package:foodbible/models/recipe.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:foodbible/models/constants.dart';
 
 class CreateRecipePage extends StatefulWidget {
   @override
@@ -101,15 +103,18 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   Future<void> addRecipe() {
     return recipies
         .add({
-          "name": "Test",
-          "ingredients": ["dd", "dd"],
-          "method": "test",
-          "pictures": [" ", " "],
-          "prepTime": "20 minutes",
-          "cookTime": "20 minutes",
-          "servings": 7,
-          "category": "20 minutes",
-          "userId": "TempUserID" // Toni Fixar userID
+          RECIPE_NAME: "Test",
+          RECIPE_INGREDIENTS: ["dd", "dd"],
+          RECIPE_DESCRIPTION: "test",
+          RECIPE_PICTURES: [" ", " "],
+          RECIPE_PREPTIME: "20 minutes",
+          RECIPE_COOKTIME: "20 minutes",
+          RECIPE_SERVINGS: 7,
+          RECIPE_VEGETARIAN: false,
+          RECIPE_GLUTENFREE: false,
+          RECIPE_MEAL: true,
+          RECIPE_DESERT: false,
+          RECIPE_USERID: "f9n9GfSifrRpzhr5I5WW" // Toni Fixar userID
         })
         .then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Recipe added successfully!"),
@@ -168,18 +173,18 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       querySnapshot.docs.forEach((doc) {
         print(doc);
         listan.add(Recipe(
-            name: doc['name'],
-            ingredients: doc['ingredients'],
-            description: doc['description'],
-            pictures: doc['pictures'],
-            prepTime: doc['prepTime'],
-            cookTime: doc['cookTime'],
-            servings: doc['servings'],
-            isVegetarian: doc['vegetarian'],
-            isGlutenfree: doc['glutenfree'],
-            isMeal: doc['meal'],
-            isDesert: doc['desert'],
-            userId: doc['userId']));
+            name: doc[RECIPE_NAME],
+            ingredients: doc[RECIPE_INGREDIENTS],
+            description: doc[RECIPE_DESCRIPTION],
+            pictures: doc[RECIPE_PICTURES],
+            prepTime: doc[RECIPE_PREPTIME],
+            cookTime: doc[RECIPE_COOKTIME],
+            servings: doc[RECIPE_SERVINGS],
+            isVegetarian: doc[RECIPE_VEGETARIAN],
+            isGlutenfree: doc[RECIPE_GLUTENFREE],
+            isMeal: doc[RECIPE_MEAL],
+            isDesert: doc[RECIPE_DESERT],
+            userId: doc[RECIPE_USERID]));
       });
     });
   }
