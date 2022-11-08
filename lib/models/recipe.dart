@@ -6,7 +6,10 @@ class Recipe {
   final String prepTime;
   final String cookTime;
   final int servings;
-  final String category;
+  final bool isVegetarian;
+  final bool isGlutenfree;
+  final bool isMeal;
+  final bool isDesert;
   final String userId;
 
   Recipe(
@@ -17,7 +20,10 @@ class Recipe {
       required this.prepTime,
       required this.cookTime,
       required this.servings,
-      required this.category,
+      required this.isVegetarian,
+      required this.isGlutenfree,
+      required this.isMeal,
+      required this.isDesert,
       required this.userId});
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
@@ -29,7 +35,10 @@ class Recipe {
       prepTime: json['prepTime']! as String,
       cookTime: json['cookTime']! as String,
       servings: json['servings']! as int,
-      category: json['category']! as String,
+      isVegetarian: json['vegetarian']! as bool,
+      isGlutenfree: json['glutenfree']! as bool,
+      isMeal: json['meal']! as bool,
+      isDesert: json['desert']! as bool,
       userId: json['userId']! as String,
     );
   }
@@ -43,7 +52,10 @@ class Recipe {
       'prepTime': prepTime,
       'cookTime': cookTime,
       'servings': servings,
-      'category': category,
+      'vegetarian' : isVegetarian,
+      'glutenfree' : isGlutenfree,
+      'meal' : isMeal,
+      'desert' : isDesert,
       'userId': userId,
     };
   }
