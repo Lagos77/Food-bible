@@ -53,7 +53,6 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future<void> addUser() {
-    // Call the user's CollectionReference to add a new user
     return users
         .add({
           'firstName': _firstNameController.text.trim(),

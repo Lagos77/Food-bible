@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,6 +15,8 @@ class HomePage extends StatefulWidget {
 Future<void> signOutEmail() async {
   await FirebaseAuth.instance.signOut();
 }
+
+final listan = <Recipe>[];
 
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -42,13 +43,31 @@ Future<List<Recipe>> getDocs() async {
       recipies.add(recipie);
     });
   });
-
-  test();
+  
   return recipies;
 }
 
-void test() {
-  print("!!!!!!!");
+Future<List<Recipe>> getRecipies() async {
+  await FirebaseFirestore.instance
+      .collection('recipies')
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((doc) {
+      print(doc);
+      listan.add(Recipe(
+          name: doc['name'],
+          ingredients: doc['ingredients'],
+          method: doc['method'],
+          pictures: doc['pictures'],
+          prepTime: doc['prepTime'],
+          cookTime: doc['cookTime'],
+          servings: doc['servings'],
+          category: doc['category'],
+          userId: doc['userId']));
+    });
+  });
+
+  return listan;
 }
 
 class _HomePageState extends State<HomePage> {
@@ -56,29 +75,110 @@ class _HomePageState extends State<HomePage> {
       FirebaseFirestore.instance.collection('recipies').snapshots();
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: _usersStream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text('Something went wrong');
-        }
+  Widget build(BuildContext context) => Scaffold(
+        body: StreamBuilder<List<Recipe>>(
+            stream: getAll(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text("Somthing wrong");
+              } else if (snapshot.hasData) {
+                final recioeiesss = snapshot.data!;
+                return ListView(
+                  children: recioeiesss.map(buildRecipe).toList(),
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => Test3(),
+            ));
+          },
+        ),
+      );
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
-        }
+  Widget buildRecipe(Recipe recipe) => ListTile(
+        leading: Image.network('${recipe.method}', fit: BoxFit.cover),
 
-        return ListView(
-          children: snapshot.data!.docs.map((DocumentSnapshot document) {
-            Map<String, dynamic> data =
-                document.data()! as Map<String, dynamic>;
-            return ListTile(
-              title: Text(data['name']),
-              subtitle: Text(data['cookTime']),
-            );
-          }).toList(),
-        );
-      },
-    );
-  }
+        //Text('${recipe.name}')),
+        title: Text(recipe.name),
+        subtitle: Row(
+          children: [
+            Text(recipe.category),
+            Text(recipe.prepTime),
+            Text(recipe.cookTime),
+            Text(recipe.servings.toString())
+          ],
+        ),
+      );
+  Stream<List<Recipe>> getAll() => FirebaseFirestore.instance
+      .collection('recipies')
+      //.where('userId', isEqualTo: "f9n9GfSifrRpzhr5I5WW")
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList());
 }
+
+
+
+  // StreamBuilder<QuerySnapshot>(
+  //   stream: _usersStream,
+  //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  //     if (snapshot.hasError) {
+  //       return Text('Something went wrong');
+  //     }
+
+  //     if (snapshot.connectionState == ConnectionState.waiting) {
+  //       return Text("Loading");
+  //     }
+
+  //     return ListView(
+  //       children: snapshot.data!.docs.map((DocumentSnapshot document) {
+  //         Map<String, dynamic> data =
+  //             document.data()! as Map<String, dynamic>;
+  //         return ListView.builder(
+  //             itemCount: listan.length,
+  //             itemBuilder: (context, index) {
+  //               return Padding(
+  //                 padding: EdgeInsets.only(bottom: 60),
+  //                 child: Card(
+  //                     elevation: 5,
+  //                     child: Column(
+  //                       children: [
+  //                         Text(
+  //                           listan[index].name,
+  //                           style: const TextStyle(fontSize: 50),
+  //                           textAlign: TextAlign.center,
+  //                         ),
+  //                       ],
+  //                     )),
+  //               );
+  //             });
+  //       }).toList(),
+  //     );
+  //   },
+  // );
+
+  // return
+  // ListView.builder(
+  //     itemCount: listan.length,
+  //     itemBuilder: (context, index) {
+  //       return Padding(
+  //         padding: EdgeInsets.only(bottom: 60),
+  //         child: Card(
+  //             elevation: 5,
+  //             child: Column(
+  //               children: [
+  //                 Text(
+  //                   listan[index].name,
+  //                   style: const TextStyle(fontSize: 50),
+  //                   textAlign: TextAlign.center,
+  //                 ),
+  //               ],
+  //             )),
+  //       );
+  //     });
+

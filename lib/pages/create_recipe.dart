@@ -28,11 +28,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   //           toFirestore: (recipe, _) => recipe.toJson(),
   //         );
 
-  Future<void>? test() {
-    print("!!!!!!!");
-    return null;
-  }
-
   Future<void> addRecipe() {
     return recipies
         .add({
@@ -43,7 +38,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           "prepTime": "20 minutes",
           "cookTime": "20 minutes",
           "servings": 7,
-          "category": "20 minutes"
+          "category": "20 minutes",
+          "userId": "TempUserID" // Toni Fixar userID
         })
         .then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Recipe added successfully!"),
@@ -92,12 +88,25 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   }
 
   Future<void> getRecipies() {
+    // ignore: deprecated_member_use
+    final listan = <Recipe>[];
+
     return FirebaseFirestore.instance
         .collection('recipies')
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        print(doc["name"]);
+        print(doc);
+        listan.add(Recipe(
+            name: doc['name'],
+            ingredients: doc['ingredients'],
+            method: doc['method'],
+            pictures: doc['pictures'],
+            prepTime: doc['prepTime'],
+            cookTime: doc['cookTime'],
+            servings: doc['servings'],
+            category: doc['category'],
+            userId: doc['userId']));
       });
     });
   }
