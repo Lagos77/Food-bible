@@ -30,6 +30,9 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   // List for ingredients
  final ingredients = <String>[];
 
+ // List for pictures
+ final recipePictures = <String>['test', 'test'];
+
  // Function to save the recipe
  void saveNewRecipe() {
    final recipeName = _nameController.text;
@@ -38,18 +41,33 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
    final recipePreptime = _preptimeController.text;
    final recipeCooktime = _cookTimeController.text;
    final recipeServings = int.parse(_servingsController.text);
+   // Lägg till bools och userID
  
-   final newRecipe = Recipe(name: recipeName, ingredients: recipeIngredients, description: recipeDescription, prepTime: recipePreptime, cookTime: recipeCooktime, servings: recipeServings);
+   final newRecipe = Recipe(
+    name: recipeName, 
+    ingredients: recipeIngredients, 
+    description: recipeDescription, 
+    pictures: recipePictures,
+    prepTime: recipePreptime, 
+    cookTime: recipeCooktime, 
+    servings: recipeServings,
+    isVegetarian: false,
+    isGlutenfree: false,
+    isMeal: true,
+    isDesert: false,
+    userId: 'f9n9GfSifrRpzhr5I5WW');
  
    clearTextFields();
  
+  /*
    print(newRecipe.name);
    print(newRecipe.ingredients);
    print(newRecipe.prepTime);
    print(newRecipe.servings);
    print(newRecipe.isDesert);
- 
+ */
  }
+
  // Clear textfields
  void clearTextFields(){
    _nameController.clear();
@@ -150,12 +168,15 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         listan.add(Recipe(
             name: doc['name'],
             ingredients: doc['ingredients'],
-            method: doc['method'],
+            description: doc['description'],
             pictures: doc['pictures'],
             prepTime: doc['prepTime'],
             cookTime: doc['cookTime'],
             servings: doc['servings'],
-            category: doc['category'],
+            isVegetarian: doc['vegetarian'],
+            isGlutenfree: doc['glutenfree'],
+            isMeal: doc['meal'],
+            isDesert: doc['desert'],
             userId: doc['userId']));
       });
     });

@@ -1,7 +1,7 @@
 class Recipe {
   final String name;
   final List ingredients;
-  final String method;
+  final String description;
   final List pictures;
   final String prepTime;
   final String cookTime;
@@ -15,7 +15,7 @@ class Recipe {
   Recipe(
       {required this.name,
       required this.ingredients,
-      required this.method,
+      required this.description,
       required this.pictures,
       required this.prepTime,
       required this.cookTime,
@@ -30,7 +30,7 @@ class Recipe {
     return Recipe(
       name: json['name']! as String,
       ingredients: json['ingredients']! as List,
-      method: json['method']! as String,
+      description: json['description']! as String,
       pictures: json['pictures']! as List,
       prepTime: json['prepTime']! as String,
       cookTime: json['cookTime']! as String,
@@ -47,7 +47,7 @@ class Recipe {
     return {
       'name': name,
       'ingredients': ingredients,
-      'method': method,
+      'description': description,
       'pictures': pictures,
       'prepTime': prepTime,
       'cookTime': cookTime,
