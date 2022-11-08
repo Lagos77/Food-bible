@@ -16,10 +16,9 @@ class _MainPageState extends State<MainPage> {
   int index = 0;
   final switchScreens = [
     HomePage(),
-    CreateRecipePage(), // Must be replaced with "Create Recipe Widget"
+    CreateRecipePage(),
     SignUp(),
     SignIn(),
-    // Test3(), // Must be replaced with "Favorite Widget"
   ];
 
   Future<void> signOutEmail() async {

@@ -12,48 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> recipeList = []; // _allResultsList
-  TextEditingController searchController = TextEditingController();
-
-  //Future? resultsLoaded;
-  List searchResults = [];
-
-  List resultsList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    searchController.addListener(onSearchChanged);
-  }
-
-  //Removes the listener when page is changed
-  @override
-  void dispose() {
-    searchController.removeListener(onSearchChanged);
-    searchController.dispose();
-    super.dispose();
-  }
-
-  //@override
-  //void didChangeDependencies() {
-  //  super.didChangeDependencies();
-  //  resultsLoaded = getRecipeList();
-  //}
-
-  onSearchChanged() {
-    searchResultsList();
-    print(searchController.text);
-  }
-
-  searchResultsList() {
-    var showResults = [];
-    if (searchController.text != "") {
-      // Search
-    } else {
-      showResults = List.from(recipeList);
-    }
-    resultsList = showResults;
-  }
+  List<String> recipeList = [];
+  String searchIndicator = "";
 
   Future getRecipeList() async {
     await FirebaseFirestore.instance.collection('recipies').get().then(
@@ -63,7 +23,6 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         );
-    searchResultsList();
   }
 
   @override
@@ -77,7 +36,6 @@ class _HomePageState extends State<HomePage> {
             //Searchbar code
             const SizedBox(height: 20.0),
             TextField(
-              controller: searchController,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey[300],
@@ -87,34 +45,50 @@ class _HomePageState extends State<HomePage> {
                 hintText: "Search for recipes...",
                 suffixIcon: const Icon(Icons.search),
               ),
+              onChanged: (value) {
+                setState(() {
+                  searchIndicator = value;
+                });
+              },
             ),
             const SizedBox(
               height: 20.0,
             ),
             Expanded(
-                child: FutureBuilder(
-              future: getRecipeList(),
-              builder: (context, snapshot) {
-                return ListView.builder(
-                  itemCount: resultsList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      child: RecipeCard(
-                        documentId: recipeList[index],
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RecipeDetail(),
-                          ),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('recipies')
+                    .snapshots(),
+                builder: (context, snapshots) {
+                  return (snapshots.connectionState == ConnectionState.waiting)
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ListView.builder(
+                          itemCount: snapshots.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            var data = snapshots.data!.docs[index].data()
+                                as Map<String, dynamic>;
+
+                            if (searchIndicator.isEmpty) {
+                              return RecipeCard(
+                                  title: '${data['name']}',
+                                  image: '${data['method']}');
+                            }
+                            if (data['name']
+                                .toString()
+                                .toLowerCase()
+                                .startsWith(searchIndicator.toLowerCase())) {
+                              return RecipeCard(
+                                  title: '${data['name']}',
+                                  image: '${data['method']}');
+                            }
+                            return Container();
+                          },
                         );
-                      },
-                    );
-                  },
-                );
-              },
-            )),
+                },
+              ),
+            ),
           ],
         ),
       ),
