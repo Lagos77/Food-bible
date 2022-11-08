@@ -103,14 +103,14 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   Future<void> addRecipe() {
     return recipies
         .add({
-          RECIPE_NAME: "Test",
-          RECIPE_INGREDIENTS: ["dd", "dd"],
-          RECIPE_DESCRIPTION: "test",
+          RECIPE_NAME: "Pasta",
+          RECIPE_INGREDIENTS: ["pasta", "vattebn"],
+          RECIPE_DESCRIPTION: "Koka pastan och ät den",
           RECIPE_PICTURES: [" ", " "],
-          RECIPE_PREPTIME: "20 minutes",
-          RECIPE_COOKTIME: "20 minutes",
-          RECIPE_SERVINGS: 7,
-          RECIPE_VEGETARIAN: false,
+          RECIPE_PREPTIME: "2 minutes",
+          RECIPE_COOKTIME: "7 minutes",
+          RECIPE_SERVINGS: 2,
+          RECIPE_VEGETARIAN: true,
           RECIPE_GLUTENFREE: false,
           RECIPE_MEAL: true,
           RECIPE_DESERT: false,
@@ -343,7 +343,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
            mainAxisAlignment: MainAxisAlignment.center,
            children: [
              MaterialButton(
-               onPressed: () => saveNewRecipe(),
+               onPressed: () => addRecipe(),
                color: Colors.amber,
                child: const Text('Save', style: TextStyle(color: Colors.black),),
                ),
