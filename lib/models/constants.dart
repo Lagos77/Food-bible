@@ -4,6 +4,7 @@ const String RECIPE_NAME = "name";
 const String RECIPE_INGREDIENTS = "ingredients";
 const String RECIPE_DESCRIPTION = "description";
 const String RECIPE_PICTURES = "pictures";
+const String RECIPE_MAIN_IMAGE = "mainImage";
 const String RECIPE_PREPTIME = "prepTime";
 const String RECIPE_COOKTIME = "cookTime";
 const String RECIPE_SERVINGS = "servings";
