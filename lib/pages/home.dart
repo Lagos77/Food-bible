@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
       //.where('userId', isEqualTo: "f9n9GfSifrRpzhr5I5WW")
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList());
+          snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList()); 
 }
 
 
