@@ -111,7 +111,8 @@ class _HomePageState extends State<HomePage> {
       );
 
   Widget buildRecipe(Recipe recipe) => ListTile(
-        leading: Image.network('${recipe.description}', fit: BoxFit.cover),
+       // leading: Image.network('${recipe.description}', fit: BoxFit.cover),
+       leading: const Icon(Icons.dinner_dining),
 
         //Text('${recipe.name}')),
         title: Text(recipe.name),
