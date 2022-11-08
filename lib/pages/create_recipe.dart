@@ -13,6 +13,11 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 // Text controllers for the input
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _ingredientsController = TextEditingController();
+  final _preptimeController = TextEditingController();
+  final _cookTimeController = TextEditingController();
+  final _servingsController = TextEditingController();
+ // final _picturesController = TextEditingController();
 
   // Bools for the different tags
   bool? isVegetarianChecked = false;
@@ -21,6 +26,51 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   bool? isGlutenfreeChecked = false;
   CollectionReference recipies =
       FirebaseFirestore.instance.collection('recipies');
+
+  // List for ingredients
+ final ingredients = <String>[];
+
+ // Function to save the recipe
+ void saveNewRecipe() {
+   final recipeName = _nameController.text;
+   final recipeDescription = _descriptionController.text;
+   final recipeIngredients = ingredients;
+   final recipePreptime = _preptimeController.text;
+   final recipeCooktime = _cookTimeController.text;
+   final recipeServings = int.parse(_servingsController.text);
+ 
+   final newRecipe = Recipe(name: recipeName, ingredients: recipeIngredients, description: recipeDescription, prepTime: recipePreptime, cookTime: recipeCooktime, servings: recipeServings);
+ 
+   clearTextFields();
+ 
+   print(newRecipe.name);
+   print(newRecipe.ingredients);
+   print(newRecipe.prepTime);
+   print(newRecipe.servings);
+   print(newRecipe.isDesert);
+ 
+ }
+ // Clear textfields
+ void clearTextFields(){
+   _nameController.clear();
+   _descriptionController.clear();
+   _ingredientsController.clear();
+   _preptimeController.clear();
+   _cookTimeController.clear();
+   _servingsController.clear();
+ }
+
+  // Add ingredient to list
+ void addIngredient(){
+   final ingredient = _ingredientsController.text;
+   if(ingredient != null){
+     ingredients.add(ingredient);
+     _ingredientsController.clear();
+   }
+ 
+ }
+
+
 
   // final recipeRef =
   //     FirebaseFirestore.instance.collection('recipies').withConverter<Recipe>(
@@ -111,122 +161,182 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     });
   }
 
-// Function to save the recipe
-
-  void saveNewRecipe() {
-    final recipeName = _nameController.text;
-    final recipeDescription = _descriptionController.text;
-  }
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
+ Widget build(BuildContext context) {
+   return SingleChildScrollView(
+     child: Padding(
+       padding: const EdgeInsets.all(8.0),
+       child: Column(
         children: [
-          const Padding(padding: EdgeInsets.all(40.0)),
-          Text("Skapa nytt recept"),
-          const Padding(padding: EdgeInsets.only(bottom: 30)),
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      _nameController.clear();
-                    },
-                    icon: const Icon(Icons.clear)),
-                hintText: "Namn på recept"),
-          ),
-          const Padding(padding: EdgeInsets.only(bottom: 30)),
-          TextField(
-            controller: _descriptionController,
-            decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      _descriptionController.clear();
-                    },
-                    icon: const Icon(Icons.clear)),
-                hintText: "Beskrivning"),
-          ),
-          const Padding(padding: EdgeInsets.all(20)),
-          Row(
-            children: [
-              Checkbox(
-                  value: isVegetarianChecked,
-                  onChanged: (newBool) {
-                    setState(() {
-                      isVegetarianChecked = newBool;
-                    });
-                  }),
-              const Text("Vegetarisk")
-            ],
-          ),
-          Row(
-            children: [
-              Checkbox(
-                  value: isGlutenfreeChecked,
-                  onChanged: (newBool) {
-                    setState(() {
-                      isGlutenfreeChecked = newBool;
-                    });
-                  }),
-              const Text("Glutenfritt")
-            ],
-          ),
-          Row(
-            children: [
-              Checkbox(
-                  value: isDesertChecked,
-                  onChanged: (newBool) {
-                    setState(() {
-                      isDesertChecked = newBool;
-                    });
-                  }),
-              const Text("Efterätt")
-            ],
-          ),
-          Row(
-            children: [
-              Checkbox(
-                  value: isMealChecked,
-                  onChanged: (newBool) {
-                    setState(() {
-                      isMealChecked = newBool;
-                    });
-                  }),
-              const Text("Måltid")
-            ],
-          ),
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MaterialButton(
-                onPressed: addRecipe,
-                color: Colors.amber,
-                child: const Text(
-                  'Spara',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              const Padding(padding: EdgeInsets.only(right: 50)),
-              MaterialButton(
-                onPressed: () {
-                  // Navigera hem
-                },
-                color: Colors.red,
-                child: const Text(
-                  'Avbryt',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ],
-          ),
-          const Padding(padding: EdgeInsets.only(bottom: 30))
-        ],
-      ),
-    );
-  }
+        const Padding(padding: EdgeInsets.all(20.0)),
+ 
+         Text("Create new recipe"),
+         const Padding(padding: EdgeInsets.only(bottom: 30)),
+ 
+         TextField(
+           controller: _nameController,
+           decoration: InputDecoration(
+             border: const OutlineInputBorder(),
+             suffixIcon: IconButton(
+               onPressed: () {
+                 _nameController.clear();
+             }, icon: const Icon(Icons.clear)),
+           hintText: "Recipe name"),
+         ),
+ 
+         const Padding(padding: EdgeInsets.only(bottom: 30)),
+ 
+         Text("Ingrediences"),
+      
+      
+         TextField(
+           controller: _ingredientsController,
+           decoration: InputDecoration(
+             border: const OutlineInputBorder(),
+             suffixIcon: IconButton(
+               onPressed: () {
+                 _ingredientsController.clear();
+             }, icon: const Icon(Icons.clear)),
+           hintText: "Example: one red onion"),
+         ),
+         MaterialButton(onPressed: ()=> addIngredient(),
+         color: Colors.amber,
+         child: const Text("Add ingredient"),
+        
+         ),
+         // Add list of added ingrediens here
+ 
+         const Padding(padding: EdgeInsets.only(bottom: 30)),
+ 
+         TextField(
+           controller: _preptimeController,
+           decoration: InputDecoration(
+             border: const OutlineInputBorder(),
+             suffixIcon: IconButton(
+               onPressed: () {
+                 _preptimeController.clear();
+             }, icon: const Icon(Icons.clear)),
+           hintText: "Preperation time"),
+         ),
+ 
+         const Padding(padding: EdgeInsets.only(bottom: 30)),
+ 
+         TextField(
+           controller: _cookTimeController,
+           decoration: InputDecoration(
+             border: const OutlineInputBorder(),
+             suffixIcon: IconButton(
+               onPressed: () {
+                 _cookTimeController.clear();
+             }, icon: const Icon(Icons.clear)),
+           hintText: "Cooking time"),
+         ),
+ 
+         const Padding(padding: EdgeInsets.only(bottom: 30)),
+ 
+         TextField(
+           controller: _servingsController,
+           decoration: InputDecoration(
+             border: const OutlineInputBorder(),
+             suffixIcon: IconButton(
+               onPressed: () {
+                 _servingsController.clear();
+             }, icon: const Icon(Icons.clear)),
+           hintText: "Servings"),
+         ),
+ 
+         const Padding(padding: EdgeInsets.only(bottom: 30)),
+ 
+         TextField(
+           controller: _descriptionController,
+           decoration: InputDecoration(
+             border: const OutlineInputBorder(),
+             suffixIcon: IconButton(
+               onPressed: () {
+                 _descriptionController.clear();
+             }, icon: const Icon(Icons.clear)),
+           hintText: "Description"),
+         ),
+ 
+         const Padding(padding: EdgeInsets.all(20)),
+ 
+         Row(children: [
+           Checkbox(
+           value: isVegetarianChecked,
+           onChanged: (newBool) {
+           setState(() {
+             isVegetarianChecked = newBool;
+           });
+         }),
+ 
+         const Text("Vegetarian")
+         ],),
+ 
+         Row(
+           children: [
+             Checkbox(
+           value: isGlutenfreeChecked,
+           onChanged: (newBool) {
+           setState(() {
+             isGlutenfreeChecked = newBool;
+           });
+         }),
+ 
+         const Text("Glutenfree")
+           ],
+         ),
+ 
+         Row(children: [
+           Checkbox(
+           value: isDesertChecked,
+           onChanged: (newBool) {
+           setState(() {
+             isDesertChecked = newBool;
+           });
+         }),
+ 
+         const Text("Desert")
+         ],),
+ 
+         Row(children: [
+           Checkbox(
+           value: isMealChecked,
+           onChanged: (newBool) {
+           setState(() {
+             isMealChecked = newBool;
+           });
+         }),
+ 
+         const Text("Meal")
+         ],),
+ 
+         Row(
+           mainAxisAlignment: MainAxisAlignment.center,
+           children: [
+             MaterialButton(
+               onPressed: () => saveNewRecipe(),
+               color: Colors.amber,
+               child: const Text('Save', style: TextStyle(color: Colors.black),),
+               ),
+               const Padding(padding: EdgeInsets.only(right: 50)),
+               MaterialButton(
+               onPressed: () {
+                 // Navigera hem
+               },
+               color: Colors.red,
+               child: const Text('Cancel', style: TextStyle(color: Colors.black),),
+               ),
+ 
+           ],
+         ),
+ 
+           const Padding(padding: EdgeInsets.only(bottom: 30))
+       ],
+  ),
+     ),
+   );
+ }
 }
+
+
