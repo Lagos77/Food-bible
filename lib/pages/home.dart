@@ -5,8 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:foodbible/models/recipe.dart';
-import 'package:foodbible/pages/singin.dart';
-import 'package:foodbible/pages/test3.dart';
 import 'package:foodbible/views/widgets/recipe_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,6 +17,7 @@ Future<void> signOutEmail() async {
 }
 
 final listan = <Recipe>[];
+
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 CollectionReference merchRef = _firestore.collection('recipies');
@@ -44,7 +43,7 @@ Future<List<Recipe>> getDocs() async {
       recipies.add(recipie);
     });
   });
-
+  
   return recipies;
 }
 
