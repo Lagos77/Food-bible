@@ -58,12 +58,15 @@ Future<List<Recipe>> getRecipies() async {
       listan.add(Recipe(
           name: doc['name'],
           ingredients: doc['ingredients'],
-          method: doc['method'],
+          description: doc['description'],
           pictures: doc['pictures'],
           prepTime: doc['prepTime'],
           cookTime: doc['cookTime'],
           servings: doc['servings'],
-          category: doc['category'],
+          isVegetarian: doc['vegetarian'],
+          isGlutenfree: doc['glutenfree'],
+          isMeal: doc['meal'],
+          isDesert: doc['desert'],
           userId: doc['userId']));
     });
   });
@@ -81,7 +84,7 @@ class _HomePageState extends State<HomePage> {
             stream: getAll(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return Text("Somthing wrong");
+                return Text("Unable to load data");
               } else if (snapshot.hasData) {
                 final recioeiesss = snapshot.data!;
                 return ListView(
@@ -102,13 +105,13 @@ class _HomePageState extends State<HomePage> {
       );
 
   Widget buildRecipe(Recipe recipe) => ListTile(
-        leading: Image.network('${recipe.method}', fit: BoxFit.cover),
+        leading: Image.network('${recipe.description}', fit: BoxFit.cover),
 
         //Text('${recipe.name}')),
         title: Text(recipe.name),
         subtitle: Row(
           children: [
-            Text(recipe.category),
+            //Text(recipe.category),
             Text(recipe.prepTime),
             Text(recipe.cookTime),
             Text(recipe.servings.toString())

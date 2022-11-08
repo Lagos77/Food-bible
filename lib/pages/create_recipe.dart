@@ -84,8 +84,10 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
    if(ingredient != null){
      ingredients.add(ingredient);
      _ingredientsController.clear();
+     print("Ingredient added! $ingredient");
+     
    }
- 
+ print("Funkar");
  }
 
 
