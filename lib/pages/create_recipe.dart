@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foodbible/models/constants.dart';
@@ -5,6 +7,7 @@ import 'package:foodbible/models/recipe.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:foodbible/models/constants.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateRecipePage extends StatefulWidget {
   @override
@@ -93,7 +96,18 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
  print("Funkar");
  }
 
+File? image;
 
+void pickImage() async {
+  try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+if(image == null) return;
+final imageTemp = File(image.path);
+setState(() => this.image = imageTemp);
+    } on PlatformException catch(e) {
+      print('Failed to pick image: $e');
+    }
+}
 
   // final recipeRef =
   //     FirebaseFirestore.instance.collection('recipies').withConverter<Recipe>(
@@ -290,8 +304,15 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
            hintText: "Description"),
          ),
  
-         const Padding(padding: EdgeInsets.all(20)),
+        const Padding(padding: EdgeInsets.all(20)),
  
+        MaterialButton(
+               onPressed: () => pickImage(),
+               color: Colors.amber,
+               child: const Text('Pick image', style: TextStyle(color: Colors.black),),
+               ),
+
+        const Padding(padding: EdgeInsets.all(20)),
          Row(children: [
            Checkbox(
            value: isVegetarianChecked,
