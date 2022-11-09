@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -96,6 +97,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
  print("Funkar");
  }
 
+bool imageIsAlive = false;
 File? image;
 
 void pickImage() async {
@@ -107,6 +109,9 @@ setState(() => this.image = imageTemp);
     } on PlatformException catch(e) {
       print('Failed to pick image: $e');
     }
+    print("image: $image");
+    imageIsAlive = true;
+    
 }
 
   // final recipeRef =
@@ -218,7 +223,16 @@ setState(() => this.image = imageTemp);
  
          Text("Create new recipe"),
          const Padding(padding: EdgeInsets.only(bottom: 30)),
- 
+
+        imageIsAlive ? Image.file(File(image!.path), height: 100, width: 100,) : const Text("Click button to upload image")
+        ,
+        MaterialButton(
+               onPressed: () => pickImage(),
+               color: Colors.amber,
+               child: const Text('pick Image', style: TextStyle(color: Colors.black),),
+               ),
+        const Padding(padding: EdgeInsets.all(10)),
+
          TextField(
            controller: _nameController,
            decoration: InputDecoration(
