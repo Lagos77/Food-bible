@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         }
 
         return MaterialApp(
-          title: 'Food bible',
+          title: 'Food Bible',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.amber,
