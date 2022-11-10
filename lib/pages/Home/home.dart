@@ -14,6 +14,11 @@ class _HomePageState extends State<HomePage> {
   List<String> recipeList = [];
   String searchIndicator = "";
 
+  bool meal = false;
+  bool desert = false;
+  bool vegetarian = false;
+  bool glutenFree = false;
+
   Future getRecipeList() async {
     await FirebaseFirestore.instance.collection('recipies').get().then(
           (snapshot) => snapshot.docs.forEach(
@@ -33,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Searchbar code
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 5.0),
             TextField(
               decoration: InputDecoration(
                 filled: true,
@@ -51,7 +56,50 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             const SizedBox(
-              height: 20.0,
+              height: 10.0,
+            ),
+            Container(
+              height: 35,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.amber,
+                    ),
+                    onPressed: () => {},
+                    child: Text("Meal"),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.amber,
+                    ),
+                    onPressed: () => {},
+                    child: Text("Desert"),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.amber,
+                    ),
+                    onPressed: () => {},
+                    child: Text("Vegetarian"),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.amber,
+                    ),
+                    onPressed: () => {},
+                    child: Text("Gluten"),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 5.0,
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
