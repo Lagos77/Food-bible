@@ -25,17 +25,16 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   final _preptimeController = TextEditingController();
   final _cookTimeController = TextEditingController();
   final _servingsController = TextEditingController();
-  // final _picturesController = TextEditingController();
 
   // User id
   final userId = FirebaseAuth.instance.currentUser?.uid;
   
 
   // Bools for the different tags
-  bool? isVegetarianChecked = false;
-  bool? isMealChecked = false;
-  bool? isDesertChecked = false;
-  bool? isGlutenfreeChecked = false;
+  bool isVegetarianChecked = false;
+  bool isMealChecked = false;
+  bool isDesertChecked = false;
+  bool isGlutenfreeChecked = false;
 
   // variables for creating recipe
   String? mainImageUrl;
@@ -72,11 +71,11 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         prepTime: recipePreptime,
         cookTime: recipeCooktime,
         servings: recipeServings,
-        isVegetarian: false,
-        isGlutenfree: false,
-        isMeal: true,
-        isDesert: false,
-        userId: 'f9n9GfSifrRpzhr5I5WW');
+        isVegetarian: isVegetarianChecked,
+        isGlutenfree: isGlutenfreeChecked,
+        isMeal: isMealChecked,
+        isDesert: isDesertChecked,
+        userId: userId!);
 
     clearTextFields();
   }
