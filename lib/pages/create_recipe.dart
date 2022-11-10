@@ -31,14 +31,21 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   bool? isMealChecked = false;
   bool? isDesertChecked = false;
   bool? isGlutenfreeChecked = false;
+
+  // Firebase collection
   CollectionReference recipies =
       FirebaseFirestore.instance.collection('recipies');
+      
+// Create a storage reference from our app
+final storageRef = FirebaseStorage.instance.ref();
 
   // List for ingredients
  final ingredients = <String>[];
 
  // List for pictures
  final recipePictures = <String>['test', 'test'];
+
+
 
  // Function to save the recipe
  void saveNewRecipe() {
@@ -112,14 +119,24 @@ setState(() => this.image = imageTemp);
     }
     print("image: $image");
     imageIsAlive = true;
+
+    uploadImage();
     
 }
 
-  // final recipeRef =
-  //     FirebaseFirestore.instance.collection('recipies').withConverter<Recipe>(
-  //           fromFirestore: (snapshot, _) => Recipe.fromJson(snapshot.data()!),
-  //           toFirestore: (recipe, _) => recipe.toJson(),
-  //         );
+ // function to save image to storage
+ Future uploadImage() async {
+final mainImagesRef = storageRef.child("images/$image");
+
+if(imageIsAlive){
+  print("UPLOADING IMAGE");
+  try{
+    await mainImagesRef.putFile(image!);
+  } on FirebaseException catch (e) {
+  print("ERROR $e");
+}
+}
+ }
 
   Future<void> addRecipe() {
     return recipies
