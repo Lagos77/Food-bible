@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class RecipeDetail extends StatelessWidget {
-  final String title;
+  var documentId;
 
-  RecipeDetail({required this.title});
+  RecipeDetail(this.documentId);
 
   @override
   Widget build(BuildContext context) {
@@ -44,26 +44,25 @@ class RecipeDetail extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    title,
+                    '${documentId["name"]}',
                     style: const TextStyle(
                         fontSize: 35, fontWeight: FontWeight.bold),
                   ),
                   Ink.image(
-                    image: NetworkImage(
-                        "https://media.istockphoto.com/id/1166171010/photo/spicy-grilled-jerk-chicken-on-a-plate.jpg?s=612x612&w=0&k=20&c=AEY55ma7yVvL4YUb4HPxaD7MJ7YcJ2g2sYWHnMXTJDk="),
+                    image: NetworkImage('${documentId["mainImage"]}'),
                     height: 300,
                     fit: BoxFit.cover,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Cooktime 7 min"),
+                      Text('${documentId["cookTime"]}'),
                       Text("Description"),
-                      Text("Preptime 5 min")
+                      Text('${documentId["prepTime"]}')
                     ],
                   ),
                   Text(
-                    "Description, description, description, description, description, description, description, description, description, description, description, description, description",
+                    '${documentId["description"]}',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -71,7 +70,7 @@ class RecipeDetail extends StatelessWidget {
                   ),
                   Text("Ingredients"),
                   Text(
-                    "Show",
+                    '${documentId["ingredients"]}',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],

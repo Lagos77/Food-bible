@@ -1,11 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../../pages/recipe_detail.dart';
+import 'recipe_detail.dart';
 
 class RecipeCard extends StatelessWidget {
-  final String title;
-  final String image;
+  var documentId;
 
-  RecipeCard({required this.title, required this.image});
+  RecipeCard(this.documentId);
+
+  /* final String title;
+  final String image;
+  final String documentId; */
+
+/*   RecipeCard(
+      {required this.title, required this.image, required this.documentId}); */
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +28,14 @@ class RecipeCard extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Ink.image(
-                image: NetworkImage(image),
+                image: NetworkImage('${documentId["mainImage"]}'),
                 colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.3), BlendMode.darken),
                 height: 150,
                 fit: BoxFit.cover,
               ),
               Text(
-                title,
+                '${documentId["name"]}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -43,9 +50,7 @@ class RecipeCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RecipeDetail(
-              title: title,
-            ),
+            builder: (context) => RecipeDetail(documentId),
           ),
         );
       },

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:foodbible/views/widgets/recipe_card.dart';
+import 'package:foodbible/pages/Home/recipe_card.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -70,19 +70,13 @@ class _HomePageState extends State<HomePage> {
                                 as Map<String, dynamic>;
 
                             if (searchIndicator.isEmpty) {
-                              return RecipeCard(
-                                title: '${data['name']}',
-                                image: '${data['mainImage']}',
-                              );
+                              return RecipeCard(snapshots.data!.docs[index]);
                             }
                             if (data['name']
                                 .toString()
                                 .toLowerCase()
                                 .startsWith(searchIndicator.toLowerCase())) {
-                              return RecipeCard(
-                                title: '${data['name']}',
-                                image: '${data['mainImage']}',
-                              );
+                              return RecipeCard(snapshots.data!.docs[index]);
                             }
                             return Container();
                           },

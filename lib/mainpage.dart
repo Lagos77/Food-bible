@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodbible/pages/create_recipe.dart';
-import 'package:foodbible/pages/home.dart';
+import 'package:foodbible/pages/Home/home.dart';
 import 'package:foodbible/pages/singin.dart';
 import 'package:foodbible/pages/singup.dart';
 
