@@ -50,6 +50,8 @@ class _SignInState extends State<SignIn> {
         print('Wrong password provided for that user.');
       }
     }
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    print("USER ID $userId");
   }
 
   Future<void> resetPassword() async {
