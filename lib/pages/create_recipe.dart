@@ -34,7 +34,9 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
   // variables for creating recipe
   String? mainImageUrl;
-  final userId = FirebaseAuth.instance.currentUser?.uid;
+ 
+  final userId = "test";
+ // final userId = FirebaseAuth.instance.currentUser?.uid;
 
   // List for ingredients
   List<String> ingredients = [];
@@ -47,7 +49,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   final storageRef = FirebaseStorage.instance.ref();
 
   // Function to save the recipe
-  void saveNewRecipe() {
+  Future<void> saveNewRecipe() async{
     final recipeName = _nameController.text;
     final recipeDescription = _descriptionController.text;
     final recipeIngredients = ingredients;
@@ -55,7 +57,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     final recipeCooktime = _cookTimeController.text;
     final recipeServings = int.parse(_servingsController.text);
     // Lägg till bools och userID
-
     final newRecipe = Recipe(
         name: recipeName,
         ingredients: recipeIngredients,
@@ -68,10 +69,19 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         isGlutenfree: isGlutenfreeChecked!,
         isMeal: isMealChecked!,
         isDesert: isDesertChecked!,
-        userId: userId!);
+        userId: userId);
 
+    recipies.add(newRecipe).then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Recipe added successfully!"),
+            )))
+        .catchError(
+            (error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Failed to add recipe!"),
+                )));
     clearTextFields();
   }
+
+
 
   // Clear textfields
   void clearTextFields() {
@@ -147,33 +157,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     print("MAIN IMAGE URL = $mainImageUrl");
   }
 
-
-  Future<void> addRecipe() {
-    return recipies
-        .add({
-          RECIPE_NAME: "Pasta",
-          RECIPE_INGREDIENTS: ["pasta", "vattebn"],
-          RECIPE_DESCRIPTION: "Koka pastan och ät den",
-          RECIPE_PICTURES: [" ", " "],
-          RECIPE_MAIN_IMAGE:
-              "gs://foodbible-c4c31.appspot.com/icons8-autism-100.png",
-          RECIPE_PREPTIME: "2 minutes",
-          RECIPE_COOKTIME: "7 minutes",
-          RECIPE_SERVINGS: 2,
-          RECIPE_VEGETARIAN: true,
-          RECIPE_GLUTENFREE: false,
-          RECIPE_MEAL: true,
-          RECIPE_DESERT: false,
-          RECIPE_USERID: "f9n9GfSifrRpzhr5I5WW" // Toni Fixar userID
-        })
-        .then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Recipe added successfully!"),
-            )))
-        .catchError(
-            (error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("Failed to add recipe!"),
-                )));
-  }
+/*
+ 
 
   Future<void> updateRecipe() {
     return recipies
@@ -238,7 +223,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       });
     });
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -248,7 +233,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           children: [
             const Padding(padding: EdgeInsets.all(20.0)),
 
-            Text("Create new recipe"),
+            const Text("Create new recipe",
+            style: TextStyle(fontSize: 20.0)),
             const Padding(padding: EdgeInsets.only(bottom: 30)),
 
             imageIsAlive
@@ -381,17 +367,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             ),
 
             const Padding(padding: EdgeInsets.all(20)),
-
-            MaterialButton(
-              onPressed: () => pickMainImage(),
-              color: Colors.amber,
-              child: const Text(
-                'Pick image',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-
-            const Padding(padding: EdgeInsets.all(20)),
             Row(
               children: [
                 Checkbox(
@@ -448,7 +423,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MaterialButton(
-                  onPressed: () => addRecipe(),
+                  onPressed: () => saveNewRecipe(),
                   color: Colors.amber,
                   child: const Text(
                     'Save',
