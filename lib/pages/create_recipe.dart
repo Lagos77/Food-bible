@@ -28,7 +28,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
   // User id
   final userId = FirebaseAuth.instance.currentUser?.uid;
-  
 
   // Bools for the different tags
   bool isVegetarianChecked = false;
@@ -134,14 +133,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         String url = await mainImagesRef.getDownloadURL();
         print("Upload SUCCESSFUL!");
         saveMainImageUrl(url);
-
       } on FirebaseException catch (e) {
         print("ERROR $e");
       }
     }
   }
 
-  void saveMainImageUrl(String url){
+  void saveMainImageUrl(String url) {
     mainImageUrl = url;
     print("MAIN IMAGE URL = $mainImageUrl");
   }
@@ -372,12 +370,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             Row(
               children: [
                 Checkbox(
-                    value: isVegetarianChecked,
-                    onChanged: (newBool) {
-                      setState(() {
-                        isVegetarianChecked = newBool;
-                      });
-                    }),
+                  value: isVegetarianChecked,
+                  onChanged: (value) => {
+                    setState(() {
+                      isVegetarianChecked = true;
+                    })
+                  },
+                ),
                 const Text("Vegetarian")
               ],
             ),
@@ -385,12 +384,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             Row(
               children: [
                 Checkbox(
-                    value: isGlutenfreeChecked,
-                    onChanged: (newBool) {
-                      setState(() {
-                        isGlutenfreeChecked = newBool;
-                      });
-                    }),
+                  value: isGlutenfreeChecked,
+                  onChanged: (value) => {
+                    setState(() {
+                      isGlutenfreeChecked = true;
+                    })
+                  },
+                ),
                 const Text("Glutenfree")
               ],
             ),
@@ -398,12 +398,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             Row(
               children: [
                 Checkbox(
-                    value: isDesertChecked,
-                    onChanged: (newBool) {
-                      setState(() {
-                        isDesertChecked = newBool;
-                      });
-                    }),
+                  value: isDesertChecked,
+                  onChanged: (value) => {
+                    setState(() {
+                      isDesertChecked = true;
+                    })
+                  },
+                ),
                 const Text("Desert")
               ],
             ),
@@ -411,12 +412,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             Row(
               children: [
                 Checkbox(
-                    value: isMealChecked,
-                    onChanged: (newBool) {
-                      setState(() {
-                        isMealChecked = newBool;
-                      });
-                    }),
+                  value: isMealChecked,
+                  onChanged: (value) => {
+                    setState(() {
+                      isMealChecked = true;
+                    })
+                  },
+                ),
                 const Text("Meal")
               ],
             ),
