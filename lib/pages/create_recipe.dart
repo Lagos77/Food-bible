@@ -31,10 +31,10 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   
 
   // Bools for the different tags
-  bool isVegetarianChecked = false;
-  bool isMealChecked = false;
-  bool isDesertChecked = false;
-  bool isGlutenfreeChecked = false;
+  bool? isVegetarianChecked = false;
+  bool? isMealChecked = false;
+  bool? isDesertChecked = false;
+  bool? isGlutenfreeChecked = false;
 
   // variables for creating recipe
   String? mainImageUrl;
@@ -48,9 +48,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
   // List for ingredients
   final ingredients = <String>[];
-
-  // List for pictures
-  final recipePictures = <String>['test', 'test'];
 
   // Function to save the recipe
   void saveNewRecipe() {
@@ -66,15 +63,14 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         name: recipeName,
         ingredients: recipeIngredients,
         description: recipeDescription,
-        pictures: recipePictures,
         mainImage: mainImageUrl!,
         prepTime: recipePreptime,
         cookTime: recipeCooktime,
         servings: recipeServings,
-        isVegetarian: isVegetarianChecked,
-        isGlutenfree: isGlutenfreeChecked,
-        isMeal: isMealChecked,
-        isDesert: isDesertChecked,
+        isVegetarian: isVegetarianChecked!,
+        isGlutenfree: isGlutenfreeChecked!,
+        isMeal: isMealChecked!,
+        isDesert: isDesertChecked!,
         userId: userId!);
 
     clearTextFields();
@@ -152,7 +148,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           RECIPE_NAME: "Pasta",
           RECIPE_INGREDIENTS: ["pasta", "vattebn"],
           RECIPE_DESCRIPTION: "Koka pastan och ät den",
-          RECIPE_PICTURES: [" ", " "],
           RECIPE_MAIN_IMAGE:
               "gs://foodbible-c4c31.appspot.com/icons8-autism-100.png",
           RECIPE_PREPTIME: "2 minutes",
@@ -224,7 +219,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             name: doc[RECIPE_NAME],
             ingredients: doc[RECIPE_INGREDIENTS],
             description: doc[RECIPE_DESCRIPTION],
-            pictures: doc[RECIPE_PICTURES],
             mainImage: doc[RECIPE_MAIN_IMAGE],
             prepTime: doc[RECIPE_PREPTIME],
             cookTime: doc[RECIPE_COOKTIME],
