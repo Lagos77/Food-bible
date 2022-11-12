@@ -26,18 +26,21 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   final _cookTimeController = TextEditingController();
   final _servingsController = TextEditingController();
 
-  // User id
-  final userId = FirebaseAuth.instance.currentUser?.uid;
-  
-
   // Bools for the different tags
-  bool isVegetarianChecked = false;
-  bool isMealChecked = false;
-  bool isDesertChecked = false;
-  bool isGlutenfreeChecked = false;
+  bool? isVegetarianChecked = false;
+  bool? isMealChecked = false;
+  bool? isDesertChecked = false;
+  bool? isGlutenfreeChecked = false;
 
   // variables for creating recipe
   String? mainImageUrl;
+  String? imageUrl;
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  // List for ingredients
+  final ingredients = <String>["Mjölk", "Flingor"];
+
+  // List for pictures
+  final recipePictures = <String>[];
 
   // Firebase collection
   CollectionReference recipies =
@@ -45,12 +48,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
 // Create a storage reference from our app
   final storageRef = FirebaseStorage.instance.ref();
-
-  // List for ingredients
-  final ingredients = <String>[];
-
-  // List for pictures
-  final recipePictures = <String>['test', 'test'];
 
   // Function to save the recipe
   void saveNewRecipe() {
@@ -71,10 +68,10 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         prepTime: recipePreptime,
         cookTime: recipeCooktime,
         servings: recipeServings,
-        isVegetarian: isVegetarianChecked,
-        isGlutenfree: isGlutenfreeChecked,
-        isMeal: isMealChecked,
-        isDesert: isDesertChecked,
+        isVegetarian: isVegetarianChecked!,
+        isGlutenfree: isGlutenfreeChecked!,
+        isMeal: isMealChecked!,
+        isDesert: isDesertChecked!,
         userId: userId!);
 
     clearTextFields();
@@ -106,7 +103,12 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   File? image;
   String? imageName;
 
-  void pickImage() async {
+  // Handeling other images
+  bool extraImagesAdded = false;
+  File? extraImage;
+  String? extraImageName;
+
+  void pickMainImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
@@ -134,16 +136,37 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         String url = await mainImagesRef.getDownloadURL();
         print("Upload SUCCESSFUL!");
         saveMainImageUrl(url);
-
+        image = null;
+        imageIsAlive = false;
       } on FirebaseException catch (e) {
         print("ERROR $e");
       }
     }
   }
 
-  void saveMainImageUrl(String url){
+  void saveMainImageUrl(String url) {
     mainImageUrl = url;
     print("MAIN IMAGE URL = $mainImageUrl");
+  }
+
+  void saveExtraImageUrlToList(String url) {
+    recipePictures.add(url);
+  }
+
+  void pickExtraImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      imageName = image.toString();
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+    print("image: $image");
+    imageIsAlive = true;
+
+    uploadImage();
   }
 
   Future<void> addRecipe() {
@@ -258,7 +281,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                   )
                 : const Text("Click button to upload image"),
             MaterialButton(
-              onPressed: () => pickImage(),
+              onPressed: () => pickMainImage(),
               color: Colors.amber,
               child: const Text(
                 'pick Image',
@@ -299,6 +322,26 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
               color: Colors.amber,
               child: const Text("Add ingredient"),
             ),
+
+
+          ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: 2,
+                  itemBuilder: (_, i) {
+                    return Center(
+                            child: Text(
+                          ingredients[i],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Color.fromARGB(255, 41, 41, 41),
+                          ),
+                        ),
+                        );
+                        
+                  }),
+            
+                
             // Add list of added ingrediens here
 
             const Padding(padding: EdgeInsets.only(bottom: 30)),
@@ -360,7 +403,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             const Padding(padding: EdgeInsets.all(20)),
 
             MaterialButton(
-              onPressed: () => pickImage(),
+              onPressed: () => pickMainImage(),
               color: Colors.amber,
               child: const Text(
                 'Pick image',
