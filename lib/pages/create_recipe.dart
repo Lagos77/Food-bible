@@ -37,7 +37,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   String? imageUrl;
   final userId = FirebaseAuth.instance.currentUser?.uid;
   // List for ingredients
-  final ingredients = <String>["Mjölk", "Flingor"];
+  // final ingredients = <String>[];
+  List<String> ingredients = [];
 
   // List for pictures
   final recipePictures = <String>[];
@@ -90,8 +91,10 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   // Add ingredient to list
   void addIngredient() {
     final ingredient = _ingredientsController.text;
-    if (ingredient != null) {
-      ingredients.add(ingredient);
+    if (ingredient.isNotEmpty) {
+      setState(() {
+        ingredients.add(ingredient);
+      });
       _ingredientsController.clear();
       print("Ingredient added! $ingredient");
     }
@@ -326,18 +329,20 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
           ListView.builder(
                   shrinkWrap: true,
-                  itemCount: 2,
+                  itemCount: ingredients.length,
                   itemBuilder: (_, i) {
-                    return Center(
-                            child: Text(
-                          ingredients[i],
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            color: Color.fromARGB(255, 41, 41, 41),
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                            ingredients[i],
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Color.fromARGB(255, 41, 41, 41),
+                            ),
                           ),
-                        ),
-                        );
+                    );
+                        
                         
                   }),
             
