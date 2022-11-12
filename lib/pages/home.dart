@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
         );
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                             if (searchIndicator.isEmpty) {
                               return RecipeCard(
                                   title: '${data['name']}',
-                                  image: '${data['method']}');
+                                  mainImage: '${data['mainImage']}');
                             }
                             if (data['name']
                                 .toString()
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                                 .startsWith(searchIndicator.toLowerCase())) {
                               return RecipeCard(
                                   title: '${data['name']}',
-                                  image: '${data['method']}');
+                                  mainImage: '${data['mainImage']}');
                             }
                             return Container();
                           },

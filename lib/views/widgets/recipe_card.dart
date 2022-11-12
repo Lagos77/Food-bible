@@ -3,9 +3,9 @@ import '../../pages/recipe_detail.dart';
 
 class RecipeCard extends StatelessWidget {
   final String title;
-  final String image;
+  final String mainImage;
 
-  RecipeCard({required this.title, required this.image});
+  RecipeCard({required this.title, required this.mainImage});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class RecipeCard extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Ink.image(
-                image: NetworkImage(image),
+                image: NetworkImage(mainImage),
                 colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.3), BlendMode.darken),
                 height: 150,
