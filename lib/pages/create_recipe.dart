@@ -34,14 +34,10 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
   // variables for creating recipe
   String? mainImageUrl;
-  String? imageUrl;
   final userId = FirebaseAuth.instance.currentUser?.uid;
-  // List for ingredients
-  // final ingredients = <String>[];
-  List<String> ingredients = [];
 
-  // List for pictures
-  final recipePictures = <String>[];
+  // List for ingredients
+  List<String> ingredients = [];
 
   // Firebase collection
   CollectionReference recipies =
@@ -64,7 +60,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         name: recipeName,
         ingredients: recipeIngredients,
         description: recipeDescription,
-        pictures: recipePictures,
         mainImage: mainImageUrl!,
         prepTime: recipePreptime,
         cookTime: recipeCooktime,
@@ -152,25 +147,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     print("MAIN IMAGE URL = $mainImageUrl");
   }
 
-  void saveExtraImageUrlToList(String url) {
-    recipePictures.add(url);
-  }
-
-  void pickExtraImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-      imageName = image.toString();
-      final imageTemp = File(image.path);
-      setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-    print("image: $image");
-    imageIsAlive = true;
-
-    uploadImage();
-  }
 
   Future<void> addRecipe() {
     return recipies
@@ -250,7 +226,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             name: doc[RECIPE_NAME],
             ingredients: doc[RECIPE_INGREDIENTS],
             description: doc[RECIPE_DESCRIPTION],
-            pictures: doc[RECIPE_PICTURES],
             mainImage: doc[RECIPE_MAIN_IMAGE],
             prepTime: doc[RECIPE_PREPTIME],
             cookTime: doc[RECIPE_COOKTIME],
