@@ -4,7 +4,6 @@ class Recipe {
   final String name;
   final List ingredients;
   final String description;
-  final List pictures;
   final String mainImage;
   final String prepTime;
   final String cookTime;
@@ -19,7 +18,6 @@ class Recipe {
       {required this.name,
       required this.ingredients,
       required this.description,
-      required this.pictures,
       required this.mainImage,
       required this.prepTime,
       required this.cookTime,
@@ -35,7 +33,6 @@ class Recipe {
       name: json[RECIPE_NAME]! as String,
       ingredients: json[RECIPE_INGREDIENTS]! as List,
       description: json[RECIPE_DESCRIPTION]! as String,
-      pictures: json[RECIPE_PICTURES]! as List,
       mainImage: json[RECIPE_MAIN_IMAGE]! as String,
       prepTime: json[RECIPE_PREPTIME]! as String,
       cookTime: json[RECIPE_COOKTIME]! as String,
@@ -53,7 +50,6 @@ class Recipe {
       RECIPE_NAME: name,
       RECIPE_INGREDIENTS: ingredients,
       RECIPE_DESCRIPTION: description,
-      RECIPE_PICTURES: pictures,
       RECIPE_MAIN_IMAGE: mainImage,
       RECIPE_PREPTIME: prepTime,
       RECIPE_COOKTIME: cookTime,
