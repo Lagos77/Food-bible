@@ -1,6 +1,5 @@
 import 'dart:ffi';
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,13 +27,12 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
   // User id
   final userId = FirebaseAuth.instance.currentUser?.uid;
-  
 
   // Bools for the different tags
-  bool isVegetarianChecked = false;
-  bool isMealChecked = false;
-  bool isDesertChecked = false;
-  bool isGlutenfreeChecked = false;
+  bool? isVegetarianChecked = false;
+  bool? isMealChecked = false;
+  bool? isDesertChecked = false;
+  bool? isGlutenfreeChecked = false;
 
   // variables for creating recipe
   String? mainImageUrl;
@@ -48,9 +46,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
   // List for ingredients
   final ingredients = <String>[];
-
-  // List for pictures
-  final recipePictures = <String>['test', 'test'];
 
   // Function to save the recipe
   void saveNewRecipe() {
@@ -66,15 +61,14 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         name: recipeName,
         ingredients: recipeIngredients,
         description: recipeDescription,
-        pictures: recipePictures,
         mainImage: mainImageUrl!,
         prepTime: recipePreptime,
         cookTime: recipeCooktime,
         servings: recipeServings,
-        isVegetarian: isVegetarianChecked,
-        isGlutenfree: isGlutenfreeChecked,
-        isMeal: isMealChecked,
-        isDesert: isDesertChecked,
+        isVegetarian: isVegetarianChecked!,
+        isGlutenfree: isGlutenfreeChecked!,
+        isMeal: isMealChecked!,
+        isDesert: isDesertChecked!,
         userId: userId!);
 
     clearTextFields();
@@ -134,14 +128,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         String url = await mainImagesRef.getDownloadURL();
         print("Upload SUCCESSFUL!");
         saveMainImageUrl(url);
-
       } on FirebaseException catch (e) {
         print("ERROR $e");
       }
     }
   }
 
-  void saveMainImageUrl(String url){
+  void saveMainImageUrl(String url) {
     mainImageUrl = url;
     print("MAIN IMAGE URL = $mainImageUrl");
   }
@@ -152,7 +145,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           RECIPE_NAME: "Pasta",
           RECIPE_INGREDIENTS: ["pasta", "vattebn"],
           RECIPE_DESCRIPTION: "Koka pastan och ät den",
-          RECIPE_PICTURES: [" ", " "],
           RECIPE_MAIN_IMAGE:
               "gs://foodbible-c4c31.appspot.com/icons8-autism-100.png",
           RECIPE_PREPTIME: "2 minutes",
@@ -164,13 +156,14 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           RECIPE_DESERT: false,
           RECIPE_USERID: "f9n9GfSifrRpzhr5I5WW" // Toni Fixar userID
         })
-        .then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        .then((value) =>
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("Recipe added successfully!"),
             )))
-        .catchError(
-            (error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("Failed to add recipe!"),
-                )));
+        .catchError((error) =>
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Failed to add recipe!"),
+            )));
   }
 
   Future<void> updateRecipe() {
@@ -224,7 +217,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             name: doc[RECIPE_NAME],
             ingredients: doc[RECIPE_INGREDIENTS],
             description: doc[RECIPE_DESCRIPTION],
-            pictures: doc[RECIPE_PICTURES],
             mainImage: doc[RECIPE_MAIN_IMAGE],
             prepTime: doc[RECIPE_PREPTIME],
             cookTime: doc[RECIPE_COOKTIME],
@@ -238,218 +230,231 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     });
   }
 
+  bool checkifLoggedin() {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            const Padding(padding: EdgeInsets.all(20.0)),
+    return !checkifLoggedin()
+        ? Column(
+            children: const [
+              Text("You need yto log in to create a recipe"),
+            ],
+          )
+        : SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  const Padding(padding: EdgeInsets.all(20.0)),
 
-            Text("Create new recipe"),
-            const Padding(padding: EdgeInsets.only(bottom: 30)),
+                  const Text("Create new recipe"),
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
 
-            imageIsAlive
-                ? Image.file(
-                    File(image!.path),
-                    height: 100,
-                    width: 100,
-                  )
-                : const Text("Click button to upload image"),
-            MaterialButton(
-              onPressed: () => pickImage(),
-              color: Colors.amber,
-              child: const Text(
-                'pick Image',
-                style: TextStyle(color: Colors.black),
+                  imageIsAlive
+                      ? Image.file(
+                          File(image!.path),
+                          height: 100,
+                          width: 100,
+                        )
+                      : const Text("Click button to upload image"),
+                  MaterialButton(
+                    onPressed: () => pickImage(),
+                    color: Colors.amber,
+                    child: const Text(
+                      'pick Image',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.all(10)),
+
+                  TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _nameController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Recipe name"),
+                  ),
+
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+
+                  const Text("Ingrediences"),
+
+                  TextField(
+                    controller: _ingredientsController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _ingredientsController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Example: one red onion"),
+                  ),
+                  MaterialButton(
+                    onPressed: () => addIngredient(),
+                    color: Colors.amber,
+                    child: const Text("Add ingredient"),
+                  ),
+                  // Add list of added ingrediens here
+
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+
+                  TextField(
+                    controller: _preptimeController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _preptimeController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Preperation time"),
+                  ),
+
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+
+                  TextField(
+                    controller: _cookTimeController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _cookTimeController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Cooking time"),
+                  ),
+
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+
+                  TextField(
+                    controller: _servingsController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _servingsController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Servings"),
+                  ),
+
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+
+                  TextField(
+                    controller: _descriptionController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _descriptionController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Description"),
+                  ),
+
+                  const Padding(padding: EdgeInsets.all(20)),
+
+                  MaterialButton(
+                    onPressed: () => pickImage(),
+                    color: Colors.amber,
+                    child: const Text(
+                      'Pick image',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+
+                  const Padding(padding: EdgeInsets.all(20)),
+                  Row(
+                    children: [
+                      Checkbox(
+                          value: isVegetarianChecked,
+                          onChanged: (newBool) {
+                            setState(() {
+                              isVegetarianChecked = newBool;
+                            });
+                          }),
+                      const Text("Vegetarian")
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      Checkbox(
+                          value: isGlutenfreeChecked,
+                          onChanged: (newBool) {
+                            setState(() {
+                              isGlutenfreeChecked = newBool;
+                            });
+                          }),
+                      const Text("Glutenfree")
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      Checkbox(
+                          value: isDesertChecked,
+                          onChanged: (newBool) {
+                            setState(() {
+                              isDesertChecked = newBool;
+                            });
+                          }),
+                      const Text("Desert")
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      Checkbox(
+                          value: isMealChecked,
+                          onChanged: (newBool) {
+                            setState(() {
+                              isMealChecked = newBool;
+                            });
+                          }),
+                      const Text("Meal")
+                    ],
+                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MaterialButton(
+                        onPressed: () => addRecipe(),
+                        color: Colors.amber,
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.only(right: 50)),
+                      MaterialButton(
+                        onPressed: () {
+                          // Navigera hem
+                        },
+                        color: Colors.red,
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const Padding(padding: EdgeInsets.only(bottom: 30))
+                ],
               ),
             ),
-            const Padding(padding: EdgeInsets.all(10)),
-
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _nameController.clear();
-                      },
-                      icon: const Icon(Icons.clear)),
-                  hintText: "Recipe name"),
-            ),
-
-            const Padding(padding: EdgeInsets.only(bottom: 30)),
-
-            Text("Ingrediences"),
-
-            TextField(
-              controller: _ingredientsController,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _ingredientsController.clear();
-                      },
-                      icon: const Icon(Icons.clear)),
-                  hintText: "Example: one red onion"),
-            ),
-            MaterialButton(
-              onPressed: () => addIngredient(),
-              color: Colors.amber,
-              child: const Text("Add ingredient"),
-            ),
-            // Add list of added ingrediens here
-
-            const Padding(padding: EdgeInsets.only(bottom: 30)),
-
-            TextField(
-              controller: _preptimeController,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _preptimeController.clear();
-                      },
-                      icon: const Icon(Icons.clear)),
-                  hintText: "Preperation time"),
-            ),
-
-            const Padding(padding: EdgeInsets.only(bottom: 30)),
-
-            TextField(
-              controller: _cookTimeController,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _cookTimeController.clear();
-                      },
-                      icon: const Icon(Icons.clear)),
-                  hintText: "Cooking time"),
-            ),
-
-            const Padding(padding: EdgeInsets.only(bottom: 30)),
-
-            TextField(
-              controller: _servingsController,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _servingsController.clear();
-                      },
-                      icon: const Icon(Icons.clear)),
-                  hintText: "Servings"),
-            ),
-
-            const Padding(padding: EdgeInsets.only(bottom: 30)),
-
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _descriptionController.clear();
-                      },
-                      icon: const Icon(Icons.clear)),
-                  hintText: "Description"),
-            ),
-
-            const Padding(padding: EdgeInsets.all(20)),
-
-            MaterialButton(
-              onPressed: () => pickImage(),
-              color: Colors.amber,
-              child: const Text(
-                'Pick image',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-
-            const Padding(padding: EdgeInsets.all(20)),
-            Row(
-              children: [
-                Checkbox(
-                    value: isVegetarianChecked,
-                    onChanged: (newBool) {
-                      setState(() {
-                        isVegetarianChecked = newBool;
-                      });
-                    }),
-                const Text("Vegetarian")
-              ],
-            ),
-
-            Row(
-              children: [
-                Checkbox(
-                    value: isGlutenfreeChecked,
-                    onChanged: (newBool) {
-                      setState(() {
-                        isGlutenfreeChecked = newBool;
-                      });
-                    }),
-                const Text("Glutenfree")
-              ],
-            ),
-
-            Row(
-              children: [
-                Checkbox(
-                    value: isDesertChecked,
-                    onChanged: (newBool) {
-                      setState(() {
-                        isDesertChecked = newBool;
-                      });
-                    }),
-                const Text("Desert")
-              ],
-            ),
-
-            Row(
-              children: [
-                Checkbox(
-                    value: isMealChecked,
-                    onChanged: (newBool) {
-                      setState(() {
-                        isMealChecked = newBool;
-                      });
-                    }),
-                const Text("Meal")
-              ],
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                MaterialButton(
-                  onPressed: () => addRecipe(),
-                  color: Colors.amber,
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.only(right: 50)),
-                MaterialButton(
-                  onPressed: () {
-                    // Navigera hem
-                  },
-                  color: Colors.red,
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-
-            const Padding(padding: EdgeInsets.only(bottom: 30))
-          ],
-        ),
-      ),
-    );
+          );
   }
 }

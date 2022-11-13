@@ -71,72 +71,88 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
+        child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
           const Padding(padding: EdgeInsets.all(40.0)),
-          Text("Sign In"),
+          const Text("Sign In",
+              style: TextStyle(
+                fontSize: 25.0,
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+                //fontFamily:  ,
+              )),
           const Padding(padding: EdgeInsets.only(bottom: 30)),
           TextField(
             controller: _emailController,
             decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      _emailController.clear();
-                    },
-                    icon: const Icon(Icons.clear)),
-                hintText: "Email"),
+              filled: true,
+              fillColor: Colors.grey[200],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              hintText: "Email",
+              suffixIcon: IconButton(
+                  onPressed: () {
+                    _emailController.clear();
+                  },
+                  icon: const Icon(Icons.clear)),
+            ),
           ),
           const Padding(padding: EdgeInsets.only(bottom: 30)),
           TextField(
             controller: _passwordController,
             decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      _passwordController.clear();
-                    },
-                    icon: const Icon(Icons.clear)),
-                hintText: "Password"),
-          ),
-          MaterialButton(
-            onPressed: resetPassword,
-            color: Colors.amber,
-            child: const Text(
-              'Forgot Password?',
-              style: TextStyle(color: Colors.black),
+              filled: true,
+              fillColor: Colors.grey[200],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              hintText: "Password",
+              suffixIcon: IconButton(
+                  onPressed: () {
+                    _passwordController.clear();
+                  },
+                  icon: const Icon(Icons.clear)),
             ),
           ),
-          const Spacer(),
+          const Padding(padding: EdgeInsets.only(bottom: 30)),
+          MaterialButton(
+            minWidth: 150.0,
+            height: 50,
+            onPressed: resetPassword,
+            color: Colors.amber,
+            child: const Text('Forgot Password?',
+                style: TextStyle(fontSize: 16.0, color: Colors.black)),
+          ),
+          const Padding(padding: EdgeInsets.only(bottom: 30)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               MaterialButton(
+                minWidth: 150.0,
+                height: 50,
                 onPressed: signInEmailAndPAssword,
                 color: Colors.amber,
-                child: const Text(
-                  'Sign in',
-                  style: TextStyle(color: Colors.black),
-                ),
+                child: const Text('Sign in',
+                    style: TextStyle(fontSize: 16.0, color: Colors.black)),
               ),
               const Padding(padding: EdgeInsets.only(right: 50)),
               MaterialButton(
-                onPressed: () {
-                  // Navigera hem
-                },
+                minWidth: 150.0,
+                height: 50,
+                onPressed: () {},
                 color: Colors.red,
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(color: Colors.black),
-                ),
+                child: const Text('Cancel',
+                    style: TextStyle(fontSize: 16.0, color: Colors.black)),
               ),
             ],
           ),
           const Padding(padding: EdgeInsets.only(bottom: 30))
         ],
       ),
-    );
+    ));
   }
 }
