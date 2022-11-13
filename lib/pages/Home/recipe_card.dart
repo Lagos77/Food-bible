@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'recipe_detail.dart';
+import 'dart:developer';
 
 class RecipeCard extends StatelessWidget {
   var documentId;

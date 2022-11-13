@@ -7,10 +7,12 @@ class RecipeDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> ingredientsList =
+        List.castFrom(documentId['ingredients'] as List ?? []);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Recipe Detail"),
+        title: const Text("Recipe Details"),
         elevation: 0,
         leading: GestureDetector(
           onTap: () {
@@ -25,7 +27,7 @@ class RecipeDetail extends StatelessWidget {
               onTap: () {
                 //Add function to save to favorite
               },
-              child: Icon(
+              child: const Icon(
                 Icons.favorite_border_outlined,
                 size: 26,
               ),
@@ -68,14 +70,15 @@ class RecipeDetail extends StatelessWidget {
                       color: Colors.grey[600],
                     ),
                   ),
-                  Text("Ingredients"),
+                  const Text("Ingredients"),
                   Text(
-                    '${documentId["ingredients"]}',
+                    '$ingredientsList',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
                     ),
                   ),
+                  Text(documentId["desert"] ? "This is a desert" : ""),
                 ],
               ),
             ),

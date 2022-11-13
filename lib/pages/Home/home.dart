@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Searchbar code
-            const SizedBox(height: 5.0),
+            const SizedBox(height: 10.0),
             TextField(
               decoration: InputDecoration(
                 filled: true,
