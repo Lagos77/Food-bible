@@ -25,8 +25,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   final _cookTimeController = TextEditingController();
   final _servingsController = TextEditingController();
 
-  // User id
-  final userId = FirebaseAuth.instance.currentUser?.uid;
 
   // Bools for the different tags
   bool? isVegetarianChecked = false;
@@ -36,6 +34,12 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
   // variables for creating recipe
   String? mainImageUrl;
+ 
+  // final userId = "test";
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+
+  // List for ingredients
+  List<String> ingredients = [];
 
   // Firebase collection
   CollectionReference recipies =
@@ -60,8 +64,10 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   // Add ingredient to list
   void addIngredient() {
     final ingredient = _ingredientsController.text;
-    if (ingredient != null) {
-      ingredients.add(ingredient);
+    if (ingredient.isNotEmpty) {
+      setState(() {
+        ingredients.add(ingredient);
+      });
       _ingredientsController.clear();
     }
   }
@@ -71,7 +77,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   File? image;
   String? imageName;
 
-  void pickImage() async {
+
+  void pickMainImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
@@ -98,6 +105,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         await mainImagesRef.putFile(image!);
         String url = await mainImagesRef.getDownloadURL();
         saveMainImageUrl(url);
+        image = null;
+        imageIsAlive = false;
       } on FirebaseException catch (e) {
         print("ERROR $e");
       }
@@ -109,9 +118,9 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   }
 
   Future<void> addRecipe() {
-
     final recipeName = _nameController.text;
     final recipeDescription = _descriptionController.text;
+    final recipeIngredients = ingredients;
     final recipePreptime = _preptimeController.text;
     final recipeCooktime = _cookTimeController.text;
     final recipeServings = int.parse(_servingsController.text);
@@ -145,7 +154,28 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("Failed to add recipe!"),
             )));
+
   }
+
+
+  // Clear textfields
+  void clearInputFields() {
+    _nameController.clear();
+    _descriptionController.clear();
+    _ingredientsController.clear();
+    _preptimeController.clear();
+    _cookTimeController.clear();
+    _servingsController.clear();
+    isVegetarianChecked = false;
+    isGlutenfreeChecked = false;
+    isMealChecked = false;
+    isDesertChecked = false;
+    mainImageUrl = "";
+    image = null;
+  }
+
+
+ 
 
   Future<void> updateRecipe() {
     return recipies
@@ -210,6 +240,9 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       });
     });
   }
+
+
+
 
   bool checkifLoggedin() {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
@@ -344,6 +377,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                             icon: const Icon(Icons.clear)),
                         hintText: "Description"),
                   ),
+
                   const Padding(padding: EdgeInsets.all(20)),
                   Row(
                     children: [
