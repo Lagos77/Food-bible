@@ -35,8 +35,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   // variables for creating recipe
   String? mainImageUrl;
  
-  final userId = "test";
- // final userId = FirebaseAuth.instance.currentUser?.uid;
+  // final userId = "test";
+  final userId = FirebaseAuth.instance.currentUser?.uid;
 
   // List for ingredients
   List<String> ingredients = [];
@@ -48,86 +48,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 // Create a storage reference from our app
   final storageRef = FirebaseStorage.instance.ref();
 
-Future<void> addRecipe() {
-    final recipeName = _nameController.text;
-    final recipeDescription = _descriptionController.text;
-    final recipeIngredients = ingredients;
-    final recipePreptime = _preptimeController.text;
-    final recipeCooktime = _cookTimeController.text;
-    final recipeServings = int.parse(_servingsController.text);
 
-    // clearTextFields();
-
-    return recipies
-        .add({
-          RECIPE_NAME: recipeName,
-          RECIPE_INGREDIENTS: recipeIngredients,
-          RECIPE_DESCRIPTION: recipeDescription,
-          RECIPE_MAIN_IMAGE:
-              mainImageUrl,
-          RECIPE_PREPTIME: recipePreptime,
-          RECIPE_COOKTIME: recipeCooktime,
-          RECIPE_SERVINGS: recipeServings,
-          RECIPE_VEGETARIAN: isVegetarianChecked,
-          RECIPE_GLUTENFREE: isGlutenfreeChecked,
-          RECIPE_MEAL: isMealChecked,
-          RECIPE_DESERT: isDesertChecked,
-          RECIPE_USERID: "test" // Toni Fixar userID
-        })
-        .then((value) =>
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Recipe added successfully!"),
-            )))
-        .catchError((error) =>
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Failed to add recipe!"),
-            )));
-  }
-
-  // Function to save the recipe
-  Future<void> createRecipeFromInput() async{
-    final recipeName = _nameController.text;
-    final recipeDescription = _descriptionController.text;
-    final recipeIngredients = ingredients;
-    final recipePreptime = _preptimeController.text;
-    final recipeCooktime = _cookTimeController.text;
-    final recipeServings = int.parse(_servingsController.text);
-    // Lägg till bools och userID
-    final newRecipe = Recipe(
-        name: recipeName,
-        ingredients: recipeIngredients,
-        description: recipeDescription,
-        mainImage: mainImageUrl!,
-        prepTime: recipePreptime,
-        cookTime: recipeCooktime,
-        servings: recipeServings,
-        isVegetarian: isVegetarianChecked!,
-        isGlutenfree: isGlutenfreeChecked!,
-        isMeal: isMealChecked!,
-        isDesert: isDesertChecked!,
-        userId: userId);
-
-    recipies.add(newRecipe).then((value) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Recipe added successfully!"),
-            )))
-        .catchError(
-            (error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("Failed to add recipe!"),
-                )));
-    clearTextFields();
-  }
-
-
-
-  // Clear textfields
-  void clearTextFields() {
-    _nameController.clear();
-    _descriptionController.clear();
-    _ingredientsController.clear();
-    _preptimeController.clear();
-    _cookTimeController.clear();
-    _servingsController.clear();
-  }
 
   // Add ingredient to list
   void addIngredient() {
@@ -191,6 +112,63 @@ Future<void> addRecipe() {
   void saveMainImageUrl(String url) {
     mainImageUrl = url;
     print("MAIN IMAGE URL = $mainImageUrl");
+  }
+
+  Future<void> addRecipe() {
+    final recipeName = _nameController.text;
+    final recipeDescription = _descriptionController.text;
+    final recipeIngredients = ingredients;
+    final recipePreptime = _preptimeController.text;
+    final recipeCooktime = _cookTimeController.text;
+    final recipeServings = int.parse(_servingsController.text);
+    final vegetarian = isVegetarianChecked;
+    final glutenFree = isGlutenfreeChecked;
+    final meal = isMealChecked;
+    final desert = isDesertChecked;
+
+    clearInputFields();
+
+    return recipies
+        .add({
+          RECIPE_NAME: recipeName,
+          RECIPE_INGREDIENTS: recipeIngredients,
+          RECIPE_DESCRIPTION: recipeDescription,
+          RECIPE_MAIN_IMAGE:
+              mainImageUrl,
+          RECIPE_PREPTIME: recipePreptime,
+          RECIPE_COOKTIME: recipeCooktime,
+          RECIPE_SERVINGS: recipeServings,
+          RECIPE_VEGETARIAN: vegetarian,
+          RECIPE_GLUTENFREE: glutenFree,
+          RECIPE_MEAL: meal,
+          RECIPE_DESERT: desert,
+          RECIPE_USERID: userId
+        })
+        .then((value) =>
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Recipe added successfully!"),
+            )))
+        .catchError((error) =>
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Failed to add recipe!"),
+            )));
+  }
+
+
+  // Clear textfields
+  void clearInputFields() {
+    _nameController.clear();
+    _descriptionController.clear();
+    _ingredientsController.clear();
+    _preptimeController.clear();
+    _cookTimeController.clear();
+    _servingsController.clear();
+    isVegetarianChecked = false;
+    isGlutenfreeChecked = false;
+    isMealChecked = false;
+    isDesertChecked = false;
+    mainImageUrl = "";
+    image = null;
   }
 
 /*
