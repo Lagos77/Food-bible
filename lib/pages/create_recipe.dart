@@ -51,33 +51,15 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   // List for ingredients
   final ingredients = <String>[];
 
-  // Function to save the recipe
-  void saveNewRecipe() {
-    final recipeName = _nameController.text;
-    final recipeDescription = _descriptionController.text;
-    final recipeIngredients = ingredients;
-    final recipePreptime = _preptimeController.text;
-    final recipeCooktime = _cookTimeController.text;
-    final recipeServings = int.parse(_servingsController.text);
-    // Lägg till bools och userID
-
-    final newRecipe = Recipe(
-        name: recipeName,
-        ingredients: recipeIngredients,
-        description: recipeDescription,
-        mainImage: mainImageUrl!,
-        prepTime: recipePreptime,
-        cookTime: recipeCooktime,
-        servings: recipeServings,
-        isVegetarian: isVegetarianChecked!,
-        isGlutenfree: isGlutenfreeChecked!,
-        isMeal: isMealChecked!,
-        isDesert: isDesertChecked!,
-        userId: userId!);
-
-    clearTextFields();
+  // Clear textfields
+  void clearTextFields() {
+    _nameController.clear();
+    _descriptionController.clear();
+    _ingredientsController.clear();
+    _preptimeController.clear();
+    _cookTimeController.clear();
+    _servingsController.clear();
   }
-
 
   // Add ingredient to list
   void addIngredient() {
@@ -87,9 +69,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         ingredients.add(ingredient);
       });
       _ingredientsController.clear();
-      print("Ingredient added! $ingredient");
     }
-    print("Funkar");
   }
 
 // Handeling main image
@@ -124,7 +104,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       try {
         await mainImagesRef.putFile(image!);
         String url = await mainImagesRef.getDownloadURL();
-        print("Upload SUCCESSFUL!");
         saveMainImageUrl(url);
         image = null;
         imageIsAlive = false;
@@ -136,7 +115,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
   void saveMainImageUrl(String url) {
     mainImageUrl = url;
-    print("MAIN IMAGE URL = $mainImageUrl");
   }
 
   Future<void> addRecipe() {
@@ -151,15 +129,14 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     final meal = isMealChecked;
     final desert = isDesertChecked;
 
-    clearInputFields();
+    clearTextFields();
 
     return recipies
         .add({
           RECIPE_NAME: recipeName,
-          RECIPE_INGREDIENTS: recipeIngredients,
+          RECIPE_INGREDIENTS: ingredients,
           RECIPE_DESCRIPTION: recipeDescription,
-          RECIPE_MAIN_IMAGE:
-              mainImageUrl,
+          RECIPE_MAIN_IMAGE:mainImageUrl,
           RECIPE_PREPTIME: recipePreptime,
           RECIPE_COOKTIME: recipeCooktime,
           RECIPE_SERVINGS: recipeServings,
@@ -283,73 +260,66 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             ],
           )
         : SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            const Padding(padding: EdgeInsets.all(20.0)),
-
-            const Text("Create new recipe",
-            style: TextStyle(fontSize: 20.0)),
-            const Padding(padding: EdgeInsets.only(bottom: 30)),
-
-            imageIsAlive
-                ? Image.file(
-                    File(image!.path),
-                    height: 100,
-                    width: 100,
-                  )
-                : const Text("Click button to upload image"),
-            MaterialButton(
-              onPressed: () => pickMainImage(),
-              color: Colors.amber,
-              child: const Text(
-                'pick Image',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-            const Padding(padding: EdgeInsets.all(10)),
-
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _nameController.clear();
-                      },
-                      icon: const Icon(Icons.clear)),
-                  hintText: "Recipe name"),
-            ),
-
-            const Padding(padding: EdgeInsets.only(bottom: 30)),
-
-const Text("Ingrediences"),
-            TextField(
-              controller: _ingredientsController,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _ingredientsController.clear();
-                      },
-                      icon: const Icon(Icons.clear)),
-                  hintText: "Example: one red onion"),
-            ),
-            MaterialButton(
-              onPressed: () => addIngredient(),
-              color: Colors.amber,
-              child: const Text("Add ingredient"),
-            ),
-
-
-          ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: ingredients.length,
-                  itemBuilder: (_, i) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  const Padding(padding: EdgeInsets.all(20.0)),
+                  const Text("Create new recipe",
+                      style: TextStyle(fontSize: 20.0)),
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+                  imageIsAlive
+                      ? Image.file(
+                          File(image!.path),
+                          height: 100,
+                          width: 100,
+                        )
+                      : const Text("Click button to upload image"),
+                  MaterialButton(
+                    onPressed: () => pickImage(),
+                    color: Colors.amber,
+                    child: const Text(
+                      'pick Image',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.all(10)),
+                  TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _nameController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Recipe name"),
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+                  Text("Ingrediences"),
+                  TextField(
+                    controller: _ingredientsController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _ingredientsController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Example: one red onion"),
+                  ),
+                  MaterialButton(
+                    onPressed: () => addIngredient(),
+                    color: Colors.amber,
+                    child: const Text("Add ingredient"),
+                  ),
+                  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: ingredients.length,
+                      itemBuilder: (_, i) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
                             ingredients[i],
                             textAlign: TextAlign.start,
                             style: TextStyle(
@@ -357,39 +327,56 @@ const Text("Ingrediences"),
                               color: Color.fromARGB(255, 41, 41, 41),
                             ),
                           ),
-                    );
-                        
-                        
-                  }),
-
-            const Padding(padding: EdgeInsets.only(bottom: 30)),
-
-            TextField(
-              controller: _preptimeController,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _preptimeController.clear();
-                      },
-                      icon: const Icon(Icons.clear)),
-                  hintText: "Preperation time"),
-            ),
-
-
-            const Padding(padding: EdgeInsets.all(20)),
-            Row(
-              children: [
-                Checkbox(
-                    value: isVegetarianChecked,
-                    onChanged: (newBool) {
-                      setState(() {
-                        isVegetarianChecked = newBool;
-                      });
-                    }),
-                const Text("Vegetarian")
-              ],
-            ),
+                        );
+                      }),
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+                  TextField(
+                    controller: _preptimeController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _preptimeController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Preperation time"),
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+                  TextField(
+                    controller: _cookTimeController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _cookTimeController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Cooking time"),
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+                  TextField(
+                    controller: _servingsController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _servingsController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Servings"),
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 30)),
+                  TextField(
+                    controller: _descriptionController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _descriptionController.clear();
+                            },
+                            icon: const Icon(Icons.clear)),
+                        hintText: "Description"),
+                  ),
 
                   const Padding(padding: EdgeInsets.all(20)),
                   Row(
@@ -404,7 +391,6 @@ const Text("Ingrediences"),
                       const Text("Vegetarian")
                     ],
                   ),
-
                   Row(
                     children: [
                       Checkbox(
@@ -417,7 +403,6 @@ const Text("Ingrediences"),
                       const Text("Glutenfree")
                     ],
                   ),
-
                   Row(
                     children: [
                       Checkbox(
@@ -430,7 +415,6 @@ const Text("Ingrediences"),
                       const Text("Desert")
                     ],
                   ),
-
                   Row(
                     children: [
                       Checkbox(
@@ -443,7 +427,6 @@ const Text("Ingrediences"),
                       const Text("Meal")
                     ],
                   ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -456,19 +439,8 @@ const Text("Ingrediences"),
                         ),
                       ),
                       const Padding(padding: EdgeInsets.only(right: 50)),
-                      MaterialButton(
-                        onPressed: () {
-                          // Navigera hem
-                        },
-                        color: Colors.red,
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
                     ],
                   ),
-
                   const Padding(padding: EdgeInsets.only(bottom: 30))
                 ],
               ),
