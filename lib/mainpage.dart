@@ -1,10 +1,12 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodbible/pages/create_recipe.dart';
+import 'package:foodbible/pages/favorites.dart';
 import 'package:foodbible/pages/home.dart';
 import 'package:foodbible/pages/singin.dart';
 import 'package:foodbible/pages/singup.dart';
-import 'package:foodbible/pages/test2.dart';
-import 'package:foodbible/pages/test3.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -15,11 +17,15 @@ class _MainPageState extends State<MainPage> {
   int index = 0;
   final switchScreens = [
     HomePage(),
-    CreateRecipePage(), // Must be replaced with "Create Recipe Widget"
+    CreateRecipePage(),
     SignUp(),
     SignIn(),
-    // Test3(), // Must be replaced with "Favorite Widget"
+    Favorites(),
   ];
+
+  Future<void> signOutEmail() async {
+    await FirebaseAuth.instance.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +41,19 @@ class _MainPageState extends State<MainPage> {
             Text('Food Bible')
           ],
         ),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              // Add more items to the menu if needed
+              PopupMenuItem(
+                child: Row(
+                  children: const [Icon(Icons.logout), Text("Sign Out")],
+                ),
+                onTap: signOutEmail,
+              ),
+            ],
+          )
+        ],
       ),
       body: switchScreens[index],
       bottomNavigationBar: NavigationBar(
@@ -58,6 +77,11 @@ class _MainPageState extends State<MainPage> {
             icon: Icon(Icons.app_registration),
             selectedIcon: Icon(Icons.app_registration),
             label: "SignUp",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.door_front_door),
+            selectedIcon: Icon(Icons.door_front_door),
+            label: "SignIn",
           ),
           NavigationDestination(
             icon: Icon(Icons.favorite),

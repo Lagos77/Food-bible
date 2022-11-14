@@ -54,10 +54,10 @@ class Recipe {
       RECIPE_PREPTIME: prepTime,
       RECIPE_COOKTIME: cookTime,
       RECIPE_SERVINGS: servings,
-      RECIPE_VEGETARIAN : isVegetarian,
-      RECIPE_GLUTENFREE : isGlutenfree,
-      RECIPE_MEAL : isMeal,
-      RECIPE_DESERT : isDesert,
+      RECIPE_VEGETARIAN: isVegetarian,
+      RECIPE_GLUTENFREE: isGlutenfree,
+      RECIPE_MEAL: isMeal,
+      RECIPE_DESERT: isDesert,
       RECIPE_USERID: userId,
     };
   }

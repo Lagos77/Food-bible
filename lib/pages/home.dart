@@ -1,14 +1,9 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:foodbible/models/recipe.dart';
-import 'package:foodbible/pages/singin.dart';
-import 'package:foodbible/pages/test3.dart';
 import 'package:foodbible/views/widgets/recipe_card.dart';
-import 'package:foodbible/models/constants.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -81,115 +76,86 @@ Future<List<Recipe>> getRecipies() async {
 }
 
 class _HomePageState extends State<HomePage> {
-  final Stream<QuerySnapshot> _usersStream =
-      FirebaseFirestore.instance.collection('recipies').snapshots();
+  List<String> recipeList = [];
+  String searchIndicator = "";
+
+  Future getRecipeList() async {
+    await FirebaseFirestore.instance.collection('recipies').get().then(
+          (snapshot) => snapshot.docs.forEach(
+            (document) {
+              recipeList.add(document.reference.id);
+            },
+          ),
+        );
+  }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: StreamBuilder<List<Recipe>>(
-            stream: getAll(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text("Unable to load data");
-              } else if (snapshot.hasData) {
-                final recioeiesss = snapshot.data!;
-                return ListView(
-                  children: recioeiesss.map(buildRecipe).toList(),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            }),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => Test3(),
-            ));
-          },
-        ),
-      );
-
-  Widget buildRecipe(Recipe recipe) => ListTile(
-       // leading: Image.network('${recipe.description}', fit: BoxFit.cover),
-       leading: const Icon(Icons.dinner_dining),
-
-        //Text('${recipe.name}')),
-        title: Text(recipe.name),
-        subtitle: Row(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //Text(recipe.category),
-            Text(recipe.prepTime),
-            Text(recipe.cookTime),
-            Text(recipe.servings.toString())
+            //Searchbar code
+            const SizedBox(height: 20.0),
+            TextField(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[300],
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide.none),
+                hintText: "Search for recipes...",
+                suffixIcon: const Icon(Icons.search),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  searchIndicator = value;
+                });
+              },
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('recipies')
+                    .snapshots(),
+                builder: (context, snapshots) {
+                  return (snapshots.connectionState == ConnectionState.waiting)
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ListView.builder(
+                          itemCount: snapshots.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            var data = snapshots.data!.docs[index].data()
+                                as Map<String, dynamic>;
+
+                            if (searchIndicator.isEmpty) {
+                              return RecipeCard(
+                                  title: '${data['name']}',
+                                  mainImage: '${data['mainImage']}');
+                            }
+                            if (data['name']
+                                .toString()
+                                .toLowerCase()
+                                .startsWith(searchIndicator.toLowerCase())) {
+                              return RecipeCard(
+                                  title: '${data['name']}',
+                                  mainImage: '${data['mainImage']}');
+                            }
+                            return Container();
+                          },
+                        );
+                },
+              ),
+            ),
           ],
         ),
-      );
-  Stream<List<Recipe>> getAll() => FirebaseFirestore.instance
-      .collection('recipies')
-      //.where('userId', isEqualTo: "f9n9GfSifrRpzhr5I5WW")
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Recipe.fromJson(doc.data())).toList()); 
+      ),
+    );
+  }
 }
-
-
-
-  // StreamBuilder<QuerySnapshot>(
-  //   stream: _usersStream,
-  //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-  //     if (snapshot.hasError) {
-  //       return Text('Something went wrong');
-  //     }
-
-  //     if (snapshot.connectionState == ConnectionState.waiting) {
-  //       return Text("Loading");
-  //     }
-
-  //     return ListView(
-  //       children: snapshot.data!.docs.map((DocumentSnapshot document) {
-  //         Map<String, dynamic> data =
-  //             document.data()! as Map<String, dynamic>;
-  //         return ListView.builder(
-  //             itemCount: listan.length,
-  //             itemBuilder: (context, index) {
-  //               return Padding(
-  //                 padding: EdgeInsets.only(bottom: 60),
-  //                 child: Card(
-  //                     elevation: 5,
-  //                     child: Column(
-  //                       children: [
-  //                         Text(
-  //                           listan[index].name,
-  //                           style: const TextStyle(fontSize: 50),
-  //                           textAlign: TextAlign.center,
-  //                         ),
-  //                       ],
-  //                     )),
-  //               );
-  //             });
-  //       }).toList(),
-  //     );
-  //   },
-  // );
-
-  // return
-  // ListView.builder(
-  //     itemCount: listan.length,
-  //     itemBuilder: (context, index) {
-  //       return Padding(
-  //         padding: EdgeInsets.only(bottom: 60),
-  //         child: Card(
-  //             elevation: 5,
-  //             child: Column(
-  //               children: [
-  //                 Text(
-  //                   listan[index].name,
-  //                   style: const TextStyle(fontSize: 50),
-  //                   textAlign: TextAlign.center,
-  //                 ),
-  //               ],
-  //             )),
-  //       );
-  //     });
-
