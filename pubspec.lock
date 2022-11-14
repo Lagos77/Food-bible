@@ -99,6 +99,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+<<<<<<< Updated upstream
   ffi:
     dependency: transitive
     description:
@@ -113,6 +114,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.4"
+=======
+>>>>>>> Stashed changes
   firebase_auth:
     dependency: "direct main"
     description:
@@ -310,6 +313,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.1"
+<<<<<<< Updated upstream
   path_provider:
     dependency: transitive
     description:
@@ -366,6 +370,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+=======
+>>>>>>> Stashed changes
   plugin_platform_interface:
     dependency: transitive
     description:
