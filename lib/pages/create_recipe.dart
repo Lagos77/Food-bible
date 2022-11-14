@@ -47,33 +47,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   // List for ingredients
   final ingredients = <String>[];
 
-  // Function to save the recipe
-  void saveNewRecipe() {
-    final recipeName = _nameController.text;
-    final recipeDescription = _descriptionController.text;
-    final recipeIngredients = ingredients;
-    final recipePreptime = _preptimeController.text;
-    final recipeCooktime = _cookTimeController.text;
-    final recipeServings = int.parse(_servingsController.text);
-    // Lägg till bools och userID
-
-    final newRecipe = Recipe(
-        name: recipeName,
-        ingredients: recipeIngredients,
-        description: recipeDescription,
-        mainImage: mainImageUrl!,
-        prepTime: recipePreptime,
-        cookTime: recipeCooktime,
-        servings: recipeServings,
-        isVegetarian: isVegetarianChecked!,
-        isGlutenfree: isGlutenfreeChecked!,
-        isMeal: isMealChecked!,
-        isDesert: isDesertChecked!,
-        userId: userId!);
-
-    clearTextFields();
-  }
-
   // Clear textfields
   void clearTextFields() {
     _nameController.clear();
@@ -90,9 +63,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     if (ingredient != null) {
       ingredients.add(ingredient);
       _ingredientsController.clear();
-      print("Ingredient added! $ingredient");
     }
-    print("Funkar");
   }
 
 // Handeling main image
@@ -126,7 +97,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       try {
         await mainImagesRef.putFile(image!);
         String url = await mainImagesRef.getDownloadURL();
-        print("Upload SUCCESSFUL!");
         saveMainImageUrl(url);
       } on FirebaseException catch (e) {
         print("ERROR $e");
@@ -136,25 +106,36 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
   void saveMainImageUrl(String url) {
     mainImageUrl = url;
-    print("MAIN IMAGE URL = $mainImageUrl");
   }
 
   Future<void> addRecipe() {
+
+    final recipeName = _nameController.text;
+    final recipeDescription = _descriptionController.text;
+    final recipePreptime = _preptimeController.text;
+    final recipeCooktime = _cookTimeController.text;
+    final recipeServings = int.parse(_servingsController.text);
+    final vegetarian = isVegetarianChecked;
+    final glutenFree = isGlutenfreeChecked;
+    final meal = isMealChecked;
+    final desert = isDesertChecked;
+
+    clearTextFields();
+
     return recipies
         .add({
-          RECIPE_NAME: "Pasta",
-          RECIPE_INGREDIENTS: ["pasta", "vattebn"],
-          RECIPE_DESCRIPTION: "Koka pastan och ät den",
-          RECIPE_MAIN_IMAGE:
-              "gs://foodbible-c4c31.appspot.com/icons8-autism-100.png",
-          RECIPE_PREPTIME: "2 minutes",
-          RECIPE_COOKTIME: "7 minutes",
-          RECIPE_SERVINGS: 2,
-          RECIPE_VEGETARIAN: true,
-          RECIPE_GLUTENFREE: false,
-          RECIPE_MEAL: true,
-          RECIPE_DESERT: false,
-          RECIPE_USERID: "f9n9GfSifrRpzhr5I5WW" // Toni Fixar userID
+          RECIPE_NAME: recipeName,
+          RECIPE_INGREDIENTS: ingredients,
+          RECIPE_DESCRIPTION: recipeDescription,
+          RECIPE_MAIN_IMAGE:mainImageUrl,
+          RECIPE_PREPTIME: recipePreptime,
+          RECIPE_COOKTIME: recipeCooktime,
+          RECIPE_SERVINGS: recipeServings,
+          RECIPE_VEGETARIAN: vegetarian,
+          RECIPE_GLUTENFREE: glutenFree,
+          RECIPE_MEAL: meal,
+          RECIPE_DESERT: desert,
+          RECIPE_USERID: userId
         })
         .then((value) =>
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -242,7 +223,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     return !checkifLoggedin()
         ? Column(
             children: const [
-              Text("You need yto log in to create a recipe"),
+              Text("You need to log in to create a recipe"),
             ],
           )
         : SingleChildScrollView(
