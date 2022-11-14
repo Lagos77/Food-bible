@@ -243,7 +243,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                         )
                       : const Text("Click button to upload image"),
                   MaterialButton(
-                    onPressed: () => pickMainImage(),
+                    onPressed: () => pickImage(),
                     color: Colors.amber,
                     child: const Text(
                       'pick Image',
