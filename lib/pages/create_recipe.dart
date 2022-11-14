@@ -48,8 +48,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 // Create a storage reference from our app
   final storageRef = FirebaseStorage.instance.ref();
 
-  // List for ingredients
-  final ingredients = <String>[];
 
   // Clear textfields
   void clearTextFields() {
@@ -276,7 +274,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                         )
                       : const Text("Click button to upload image"),
                   MaterialButton(
-                    onPressed: () => pickImage(),
+                    onPressed: () => pickMainImage(),
                     color: Colors.amber,
                     child: const Text(
                       'pick Image',

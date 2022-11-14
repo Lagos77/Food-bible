@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:foodbible/views/widgets/recipe_card.dart';
+import 'package:foodbible/models/recipe.dart';
+import 'package:foodbible/models/constants.dart';
 
 class HomePage extends StatefulWidget {
   @override
