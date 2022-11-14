@@ -251,10 +251,9 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
               child: Column(
                 children: [
                   const Padding(padding: EdgeInsets.all(20.0)),
-
-                  const Text("Create new recipe"),
+                  const Text("Create new recipe",
+                      style: TextStyle(fontSize: 20.0)),
                   const Padding(padding: EdgeInsets.only(bottom: 30)),
-
                   imageIsAlive
                       ? Image.file(
                           File(image!.path),
@@ -263,7 +262,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                         )
                       : const Text("Click button to upload image"),
                   MaterialButton(
-                    onPressed: () => pickImage(),
+                    onPressed: () => pickMainImage(),
                     color: Colors.amber,
                     child: const Text(
                       'pick Image',
@@ -271,7 +270,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                     ),
                   ),
                   const Padding(padding: EdgeInsets.all(10)),
-
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
@@ -283,11 +281,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                             icon: const Icon(Icons.clear)),
                         hintText: "Recipe name"),
                   ),
-
                   const Padding(padding: EdgeInsets.only(bottom: 30)),
-
-                  const Text("Ingrediences"),
-
+                  Text("Ingrediences"),
                   TextField(
                     controller: _ingredientsController,
                     decoration: InputDecoration(
@@ -304,10 +299,23 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                     color: Colors.amber,
                     child: const Text("Add ingredient"),
                   ),
-                  // Add list of added ingrediens here
-
+                  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: ingredients.length,
+                      itemBuilder: (_, i) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            ingredients[i],
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Color.fromARGB(255, 41, 41, 41),
+                            ),
+                          ),
+                        );
+                      }),
                   const Padding(padding: EdgeInsets.only(bottom: 30)),
-
                   TextField(
                     controller: _preptimeController,
                     decoration: InputDecoration(
@@ -319,9 +327,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                             icon: const Icon(Icons.clear)),
                         hintText: "Preperation time"),
                   ),
-
                   const Padding(padding: EdgeInsets.only(bottom: 30)),
-
                   TextField(
                     controller: _cookTimeController,
                     decoration: InputDecoration(
@@ -333,9 +339,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                             icon: const Icon(Icons.clear)),
                         hintText: "Cooking time"),
                   ),
-
                   const Padding(padding: EdgeInsets.only(bottom: 30)),
-
                   TextField(
                     controller: _servingsController,
                     decoration: InputDecoration(
@@ -347,9 +351,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                             icon: const Icon(Icons.clear)),
                         hintText: "Servings"),
                   ),
-
                   const Padding(padding: EdgeInsets.only(bottom: 30)),
-
                   TextField(
                     controller: _descriptionController,
                     decoration: InputDecoration(
@@ -361,18 +363,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                             icon: const Icon(Icons.clear)),
                         hintText: "Description"),
                   ),
-
-                  const Padding(padding: EdgeInsets.all(20)),
-
-                  MaterialButton(
-                    onPressed: () => pickImage(),
-                    color: Colors.amber,
-                    child: const Text(
-                      'Pick image',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-
                   const Padding(padding: EdgeInsets.all(20)),
                   Row(
                     children: [
@@ -386,7 +376,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                       const Text("Vegetarian")
                     ],
                   ),
-
                   Row(
                     children: [
                       Checkbox(
@@ -399,7 +388,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                       const Text("Glutenfree")
                     ],
                   ),
-
                   Row(
                     children: [
                       Checkbox(
@@ -412,7 +400,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                       const Text("Desert")
                     ],
                   ),
-
                   Row(
                     children: [
                       Checkbox(
@@ -425,7 +412,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                       const Text("Meal")
                     ],
                   ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -438,19 +424,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.only(right: 50)),
-                      MaterialButton(
-                        onPressed: () {
-                          // Navigera hem
-                        },
-                        color: Colors.red,
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
                     ],
                   ),
-
                   const Padding(padding: EdgeInsets.only(bottom: 30))
                 ],
               ),
