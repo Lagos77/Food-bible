@@ -7,8 +7,7 @@ class RecipeDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> ingredientsList =
-        List.castFrom(documentId['ingredients'] as List ?? []);
+    var ingredientsList = documentId['ingredients'];
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -43,42 +42,140 @@ class RecipeDetail extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    '${documentId["name"]}',
-                    style: const TextStyle(
-                        fontSize: 35, fontWeight: FontWeight.bold),
+                  Column(
+                    //crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${documentId["name"]}',
+                        style: const TextStyle(
+                            fontSize: 35, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Created by",
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        '${documentId['userId']}',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[600],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 3),
                   Ink.image(
                     image: NetworkImage('${documentId["mainImage"]}'),
                     height: 300,
                     fit: BoxFit.cover,
                   ),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${documentId["cookTime"]}'),
-                      Text("Description"),
-                      Text('${documentId["prepTime"]}')
+                      Container(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.takeout_dining),
+                            Text(
+                              '${documentId["cookTime"]} min cooktime',
+                              style: TextStyle(fontSize: 11),
+                            )
+                          ],
+                        ),
+                      ),
+                      Text("Servings: ${documentId['servings']}"),
+                      Container(
+                        child: Row(children: [
+                          Text(
+                            '${documentId["prepTime"]} min preparation',
+                            style: TextStyle(fontSize: 11),
+                          ),
+                          const Icon(Icons.local_dining)
+                        ]),
+                      )
                     ],
                   ),
-                  Text(
-                    '${documentId["description"]}',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: const [
+                      Text(
+                        "Description",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                  const Text("Ingredients"),
-                  Text(
-                    '$ingredientsList',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Text(
+                        '${documentId["description"]}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(documentId["desert"] ? "This is a desert" : ""),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: const [
+                      Text(
+                        "Ingredients",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: ingredientsList.length,
+                    itemBuilder: (BuildContext context, index) {
+                      return Row(children: [
+                        const Icon(
+                          Icons.circle,
+                          size: 7.0,
+                        ),
+                        SizedBox(width: 5),
+                        Text(ingredientsList[index].toString()),
+                      ]);
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: const [
+                      Text(
+                        "Type of meal",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(documentId["meal"] ? "This is a meal" : ""),
+                      Text(documentId["desert"] ? "This is a desert" : ""),
+                      Text(documentId["glutenfree"]
+                          ? "This is gluten free"
+                          : ""),
+                      Text(
+                          documentId["vegetarian"] ? "This is vegetarian" : ""),
+                    ],
+                  )
                 ],
               ),
             ),

@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   bool vegetarian = false;
   bool glutenFree = false;
 
-  Future getRecipeList() async {
+/*   Future getRecipeList() async {
     await FirebaseFirestore.instance.collection('recipies').get().then(
           (snapshot) => snapshot.docs.forEach(
             (document) {
@@ -27,7 +27,21 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         );
+  } */
+
+/*   Future mealSort() async {
+    await FirebaseFirestore.instance
+        .collection('recipies')
+        .orderBy('meal', descending: false)
+        .snapshots();
   }
+
+  Future vegSort() async {
+    await FirebaseFirestore.instance
+        .collection('recipies')
+        .orderBy('vegetarian', descending: false)
+        .snapshots();
+  } */
 
   @override
   Widget build(BuildContext context) {
