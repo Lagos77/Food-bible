@@ -48,8 +48,44 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 // Create a storage reference from our app
   final storageRef = FirebaseStorage.instance.ref();
 
+Future<void> addRecipe() {
+    final recipeName = _nameController.text;
+    final recipeDescription = _descriptionController.text;
+    final recipeIngredients = ingredients;
+    final recipePreptime = _preptimeController.text;
+    final recipeCooktime = _cookTimeController.text;
+    final recipeServings = int.parse(_servingsController.text);
+
+    // clearTextFields();
+
+    return recipies
+        .add({
+          RECIPE_NAME: recipeName,
+          RECIPE_INGREDIENTS: recipeIngredients,
+          RECIPE_DESCRIPTION: recipeDescription,
+          RECIPE_MAIN_IMAGE:
+              mainImageUrl,
+          RECIPE_PREPTIME: recipePreptime,
+          RECIPE_COOKTIME: recipeCooktime,
+          RECIPE_SERVINGS: recipeServings,
+          RECIPE_VEGETARIAN: isVegetarianChecked,
+          RECIPE_GLUTENFREE: isGlutenfreeChecked,
+          RECIPE_MEAL: isMealChecked,
+          RECIPE_DESERT: isDesertChecked,
+          RECIPE_USERID: "test" // Toni Fixar userID
+        })
+        .then((value) =>
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Recipe added successfully!"),
+            )))
+        .catchError((error) =>
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Failed to add recipe!"),
+            )));
+  }
+
   // Function to save the recipe
-  Future<void> saveNewRecipe() async{
+  Future<void> createRecipeFromInput() async{
     final recipeName = _nameController.text;
     final recipeDescription = _descriptionController.text;
     final recipeIngredients = ingredients;
@@ -224,6 +260,9 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     });
   }
 */
+
+
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -423,7 +462,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MaterialButton(
-                  onPressed: () => saveNewRecipe(),
+                  onPressed: () => addRecipe(),
                   color: Colors.amber,
                   child: const Text(
                     'Save',
