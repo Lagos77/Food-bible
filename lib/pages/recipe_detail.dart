@@ -1,39 +1,74 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:foodbible/models/recipe.dart';
 
 class RecipeDetail extends StatelessWidget {
   var documentId;
 
   RecipeDetail(this.documentId);
 
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  final toBeUsed = FirebaseAuth.instance.currentUser?.uid;
+
+  bool checkifLoggedin() {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> AddtoFavorites() {
+    var uid = "";
+    var currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      uid = currentUser.uid;
+    }
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc('${uid}')
+        .update({
+          'favorites': FieldValue.arrayUnion([documentId.reference.id])
+        })
+        .then((value) => print("User Updated"))
+        .catchError((error) => print("Failed to update user: $error"));
+  }
+
   @override
   Widget build(BuildContext context) {
     var ingredientsList = documentId['ingredients'];
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Recipe Details"),
-        elevation: 0,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_back),
-        ),
-        actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              onTap: () {
-                //Add function to save to favorite
-              },
-              child: const Icon(
-                Icons.favorite_border_outlined,
-                size: 26,
-              ),
-            ),
-          )
-        ],
-      ),
+          centerTitle: true,
+          title: const Text("Recipe Details"),
+          elevation: 0,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back),
+          ),
+          actions: checkifLoggedin()
+              ? <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 20.0),
+                    child: GestureDetector(
+                      onTap: AddtoFavorites,
+                      child: const Icon(
+                        Icons.favorite_border_outlined,
+                        size: 26,
+                      ),
+                    ),
+                  )
+                ]
+              : <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 20.0),
+                    child: GestureDetector(child: Text("")),
+                  )
+                ]),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
@@ -65,7 +100,7 @@ class RecipeDetail extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${documentId['userId']}',
+                        '${documentId["userName"]}',
                         style: TextStyle(
                           fontSize: 11,
                           color: Colors.grey[600],

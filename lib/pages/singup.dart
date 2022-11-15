@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foodbible/models/constants.dart';
 import 'package:foodbible/models/recipe.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,6 +35,7 @@ class _SignUpState extends State<SignUp> {
         email: _emailController.text.toLowerCase().trim(),
         password: _passwordController.text.trim(),
       );
+
       addUser();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -53,12 +55,16 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future<void> addUser() {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+
     return users
-        .add({
+        .doc(userId)
+        .set({
           'firstName': _firstNameController.text.trim(),
           'lastName': _LastNameController.text.trim(),
           'email': _emailController.text.toLowerCase().trim(),
-          'userName': _userNameController.text.trim()
+          'userName': _userNameController.text.trim(),
+          'favorites': []
         })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));

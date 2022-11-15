@@ -17,7 +17,6 @@ class CreateRecipePage extends StatefulWidget {
 }
 
 class _CreateRecipePageState extends State<CreateRecipePage> {
-// Text controllers for the input
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _ingredientsController = TextEditingController();
@@ -25,31 +24,23 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   final _cookTimeController = TextEditingController();
   final _servingsController = TextEditingController();
 
-
-  // Bools for the different tags
   bool? isVegetarianChecked = false;
   bool? isMealChecked = false;
   bool? isDesertChecked = false;
   bool? isGlutenfreeChecked = false;
 
-  // variables for creating recipe
   String? mainImageUrl;
- 
-  // final userId = "test";
   final userId = FirebaseAuth.instance.currentUser?.uid;
-
-  // List for ingredients
   List<String> ingredients = [];
-
-  // Firebase collection
   CollectionReference recipies =
       FirebaseFirestore.instance.collection('recipies');
-
-// Create a storage reference from our app
   final storageRef = FirebaseStorage.instance.ref();
+  bool imageIsAlive = false;
+  File? image;
+  String? imageName;
 
+  final user = "";
 
-  // Clear textfields
   void clearTextFields() {
     _nameController.clear();
     _descriptionController.clear();
@@ -59,7 +50,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     _servingsController.clear();
   }
 
-  // Add ingredient to list
   void addIngredient() {
     final ingredient = _ingredientsController.text;
     if (ingredient.isNotEmpty) {
@@ -69,12 +59,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       _ingredientsController.clear();
     }
   }
-
-// Handeling main image
-  bool imageIsAlive = false;
-  File? image;
-  String? imageName;
-
 
   void pickMainImage() async {
     try {
@@ -92,7 +76,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     uploadImage();
   }
 
-  // function to save image to storage
   Future uploadImage() async {
     DateTime dateNow = DateTime.now();
     final mainImagesRef = storageRef.child("images/$userId$dateNow$imageName");
@@ -115,7 +98,19 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     mainImageUrl = url;
   }
 
+  Future<String> showDisplayName() async {
+    var collection = FirebaseFirestore.instance.collection('users');
+    var docSnapshot = await collection.doc(userId).get();
+
+    Map<String, dynamic>? data = docSnapshot.data();
+
+    var user = data!['userName'].toString();
+    return user;
+  }
+
   Future<void> addRecipe() {
+    showDisplayName();
+
     final recipeName = _nameController.text;
     final recipeDescription = _descriptionController.text;
     final recipeIngredients = ingredients;
@@ -126,6 +121,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     final glutenFree = isGlutenfreeChecked;
     final meal = isMealChecked;
     final desert = isDesertChecked;
+    final userName = user;
 
     clearTextFields();
 
@@ -134,7 +130,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           RECIPE_NAME: recipeName,
           RECIPE_INGREDIENTS: ingredients,
           RECIPE_DESCRIPTION: recipeDescription,
-          RECIPE_MAIN_IMAGE:mainImageUrl,
+          RECIPE_MAIN_IMAGE: mainImageUrl,
           RECIPE_PREPTIME: recipePreptime,
           RECIPE_COOKTIME: recipeCooktime,
           RECIPE_SERVINGS: recipeServings,
@@ -142,7 +138,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           RECIPE_GLUTENFREE: glutenFree,
           RECIPE_MEAL: meal,
           RECIPE_DESERT: desert,
-          RECIPE_USERID: userId
+          RECIPE_USERID: userId,
+          RECIPE_USERNAME: userName,
         })
         .then((value) =>
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -152,11 +149,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("Failed to add recipe!"),
             )));
-
   }
 
-
-  // Clear textfields
   void clearInputFields() {
     _nameController.clear();
     _descriptionController.clear();
@@ -172,27 +166,11 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     image = null;
   }
 
-
- 
-
-  Future<void> updateRecipe() {
-    return recipies
-        .doc('docID')
-        .update({'name': 'Changing Recipe Name'})
-        .then((value) => print("Recipe Updated"))
-        .catchError((error) => print("Failed to update recipe: $error"));
-  }
-
-  Future<void> updateUserAndImage() {
-    // to update image
-    return rootBundle
-        .load('assets/images/sample.jpg')
-        .then((bytes) => bytes.buffer.asUint8List())
-        .then((avatar) {
-          return recipies.doc('docID').update({'info.avatar': Blob(avatar)});
-        })
-        .then((value) => print("Recipe Updated"))
-        .catchError((error) => print("Failed to update recipe: $error"));
+  bool checkifLoggedin() {
+    if (FirebaseAuth.instance.currentUser?.uid != null) {
+      return true;
+    }
+    return false;
   }
 
   Future<void> deleteRecipe() {
@@ -201,52 +179,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         .delete()
         .then((value) => print("Recipe Deleted"))
         .catchError((error) => print("Failed to delete recipe: $error"));
-  }
-
-  Future<void> deleteField() {
-    return recipies
-        .doc('docID')
-        .update({'servings': FieldValue.delete()})
-        .then((value) => print("Recipe's Property Deleted"))
-        .catchError(
-            (error) => print("Failed to delete Recipe's property: $error"));
-  }
-
-  Future<void> getRecipies() {
-    // ignore: deprecated_member_use
-    final listan = <Recipe>[];
-
-    return FirebaseFirestore.instance
-        .collection('recipies')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        print(doc);
-        listan.add(Recipe(
-            name: doc[RECIPE_NAME],
-            ingredients: doc[RECIPE_INGREDIENTS],
-            description: doc[RECIPE_DESCRIPTION],
-            mainImage: doc[RECIPE_MAIN_IMAGE],
-            prepTime: doc[RECIPE_PREPTIME],
-            cookTime: doc[RECIPE_COOKTIME],
-            servings: doc[RECIPE_SERVINGS],
-            isVegetarian: doc[RECIPE_VEGETARIAN],
-            isGlutenfree: doc[RECIPE_GLUTENFREE],
-            isMeal: doc[RECIPE_MEAL],
-            isDesert: doc[RECIPE_DESERT],
-            userId: doc[RECIPE_USERID]));
-      });
-    });
-  }
-
-
-
-
-  bool checkifLoggedin() {
-    if (FirebaseAuth.instance.currentUser?.uid != null) {
-      return true;
-    }
-    return false;
   }
 
   @override
@@ -375,7 +307,6 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
                             icon: const Icon(Icons.clear)),
                         hintText: "Description"),
                   ),
-
                   const Padding(padding: EdgeInsets.all(20)),
                   Row(
                     children: [
