@@ -29,19 +29,31 @@ class _HomePageState extends State<HomePage> {
         );
   } */
 
-/*   Future mealSort() async {
-    await FirebaseFirestore.instance
-        .collection('recipies')
-        .orderBy('meal', descending: false)
-        .snapshots();
+  firebaseSorting() {
+    if (vegetarian == true) {
+      return FirebaseFirestore.instance
+          .collection('recipies')
+          .orderBy('vegetarian', descending: true)
+          .snapshots();
+    } else if (meal == true) {
+      return FirebaseFirestore.instance
+          .collection('recipies')
+          .orderBy('meal', descending: true)
+          .snapshots();
+    } else if (desert == true) {
+      return FirebaseFirestore.instance
+          .collection('recipies')
+          .orderBy('desert', descending: true)
+          .snapshots();
+    } else if (glutenFree == true) {
+      return FirebaseFirestore.instance
+          .collection('recipies')
+          .orderBy('glutenfree', descending: true)
+          .snapshots();
+    } else {
+      return FirebaseFirestore.instance.collection('recipies').snapshots();
+    }
   }
-
-  Future vegSort() async {
-    await FirebaseFirestore.instance
-        .collection('recipies')
-        .orderBy('vegetarian', descending: false)
-        .snapshots();
-  } */
 
   @override
   Widget build(BuildContext context) {
@@ -82,32 +94,32 @@ class _HomePageState extends State<HomePage> {
                       primary: Colors.white,
                       backgroundColor: Colors.amber,
                     ),
-                    onPressed: () => {},
-                    child: Text("Meal"),
+                    onPressed: () => {setState(() => meal = !meal)},
+                    child: Text(meal ? 'Sorted' : 'Meal'),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
                       primary: Colors.white,
                       backgroundColor: Colors.amber,
                     ),
-                    onPressed: () => {},
-                    child: Text("Desert"),
+                    onPressed: () => {setState(() => desert = !desert)},
+                    child: Text(desert ? "Sorted" : "Desert"),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
                       primary: Colors.white,
                       backgroundColor: Colors.amber,
                     ),
-                    onPressed: () => {},
-                    child: Text("Vegetarian"),
+                    onPressed: () => {setState(() => vegetarian = !vegetarian)},
+                    child: Text(vegetarian ? 'Sorted' : 'Vegetarian'),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
                       primary: Colors.white,
                       backgroundColor: Colors.amber,
                     ),
-                    onPressed: () => {},
-                    child: Text("Gluten"),
+                    onPressed: () => {setState(() => glutenFree = !glutenFree)},
+                    child: Text(glutenFree ? "Sorted" : "Gluten"),
                   ),
                 ],
               ),
@@ -117,9 +129,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('recipies')
-                    .snapshots(),
+                stream: firebaseSorting(),
                 builder: (context, snapshots) {
                   return (snapshots.connectionState == ConnectionState.waiting)
                       ? const Center(
