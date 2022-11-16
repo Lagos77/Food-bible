@@ -1,19 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:foodbible/pages/recipe_detail.dart';
 import 'dart:developer';
 
-class RecipeCard extends StatelessWidget {
+import 'package:foodbible/pages/recipe_detail.dart';
+
+class FavoritesCard extends StatelessWidget {
   var documentId;
 
-  RecipeCard(this.documentId);
-
-  /* final String title;
-  final String image;
-  final String documentId; */
-
-/*   RecipeCard(
-      {required this.title, required this.image, required this.documentId}); */
+  FavoritesCard(this.documentId);
 
   @override
   Widget build(BuildContext context) {

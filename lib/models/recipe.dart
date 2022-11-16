@@ -13,6 +13,7 @@ class Recipe {
   final bool isMeal;
   final bool isDesert;
   final String userId;
+  final String userName;
 
   Recipe(
       {required this.name,
@@ -26,7 +27,8 @@ class Recipe {
       required this.isGlutenfree,
       required this.isMeal,
       required this.isDesert,
-      required this.userId});
+      required this.userId,
+      required this.userName});
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
@@ -42,6 +44,7 @@ class Recipe {
       isMeal: json[RECIPE_MEAL]! as bool,
       isDesert: json[RECIPE_DESERT]! as bool,
       userId: json[RECIPE_USERID]! as String,
+      userName: json[RECIPE_USERNAME] as String,
     );
   }
 
@@ -59,6 +62,7 @@ class Recipe {
       RECIPE_MEAL: isMeal,
       RECIPE_DESERT: isDesert,
       RECIPE_USERID: userId,
+      RECIPE_USERNAME: userName,
     };
   }
 }
