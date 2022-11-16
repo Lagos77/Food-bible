@@ -49,7 +49,22 @@ class _FavoritesState extends State<Favorites> {
     return !checkifLoggedin()
         ? Column(
             children: [
-              Text("You need yto log in to see your favorites"),
+              const Padding(padding: EdgeInsets.only(bottom: 30)),
+              const SizedBox(height: 3),
+              Ink.image(
+                image: const NetworkImage(
+                    'https://firebasestorage.googleapis.com/v0/b/foodbible-c4c31.appspot.com/o/21014-Good-old-Fashioned-Pancakes-mfs_001-1fa26bcdedc345f182537d95b6cf92d8.jpeg?alt=media&token=174fce35-01b5-41ee-8241-8664358ea2d3'),
+                height: 300,
+                fit: BoxFit.cover,
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 30)),
+              Text(" You need to log in to see your favorites",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                    //fontFamily:  ,
+                  )),
             ],
           )
         : Scaffold(
