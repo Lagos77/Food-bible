@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodbible/pages/create_recipe.dart';
+import 'package:foodbible/pages/favorites.dart';
 import 'package:foodbible/pages/home.dart';
 import 'package:foodbible/pages/singin.dart';
 import 'package:foodbible/pages/singup.dart';
@@ -19,6 +20,7 @@ class _MainPageState extends State<MainPage> {
     CreateRecipePage(),
     SignUp(),
     SignIn(),
+    Favorites(),
   ];
 
   Future<void> signOutEmail() async {
@@ -47,10 +49,7 @@ class _MainPageState extends State<MainPage> {
                 child: Row(
                   children: const [Icon(Icons.logout), Text("Sign Out")],
                 ),
-                onTap: () {
-                  // Add function for logout
-                  //signOutEmail();
-                },
+                onTap: signOutEmail,
               ),
             ],
           )
@@ -78,6 +77,11 @@ class _MainPageState extends State<MainPage> {
             icon: Icon(Icons.app_registration),
             selectedIcon: Icon(Icons.app_registration),
             label: "SignUp",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.door_front_door),
+            selectedIcon: Icon(Icons.door_front_door),
+            label: "SignIn",
           ),
           NavigationDestination(
             icon: Icon(Icons.favorite),

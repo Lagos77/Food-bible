@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class User {
   String id;
   final String firstName;
@@ -5,6 +7,7 @@ class User {
   final String email;
   final String userName;
   final String password;
+  final Array favorites;
 
   User(
       {this.id = "",
@@ -12,7 +15,8 @@ class User {
       required this.lastName,
       required this.email,
       required this.userName,
-      required this.password});
+      required this.password,
+      required this.favorites});
 
   User.fromJson(Map<String, Object?> json)
       : this(
@@ -21,7 +25,8 @@ class User {
             lastName: json['lastName']! as String,
             email: json['email']! as String,
             userName: json['userName']! as String,
-            password: json['password']! as String);
+            password: json['password']! as String,
+            favorites: json['favorites']! as Array);
 
   Map<String, Object?> toJson() {
     return {
@@ -30,7 +35,8 @@ class User {
       'lastName': lastName,
       'email': email,
       'userName': userName,
-      'password': password
+      'password': password,
+      'favorites': favorites,
     };
   }
 }

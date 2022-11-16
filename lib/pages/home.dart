@@ -14,7 +14,12 @@ class _HomePageState extends State<HomePage> {
   List<String> recipeList = [];
   String searchIndicator = "";
 
-  Future getRecipeList() async {
+  bool meal = false;
+  bool desert = false;
+  bool vegetarian = false;
+  bool glutenFree = false;
+
+/*   Future getRecipeList() async {
     await FirebaseFirestore.instance.collection('recipies').get().then(
           (snapshot) => snapshot.docs.forEach(
             (document) {
@@ -22,9 +27,35 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         );
+  } */
+
+  firebaseSorting() {
+    if (vegetarian == true) {
+      return FirebaseFirestore.instance
+          .collection('recipies')
+          .orderBy('vegetarian', descending: true)
+          .snapshots();
+    } else if (meal == true) {
+      return FirebaseFirestore.instance
+          .collection('recipies')
+          .orderBy('meal', descending: true)
+          .snapshots();
+    } else if (desert == true) {
+      return FirebaseFirestore.instance
+          .collection('recipies')
+          .orderBy('desert', descending: true)
+          .snapshots();
+    } else if (glutenFree == true) {
+      return FirebaseFirestore.instance
+          .collection('recipies')
+          .orderBy('glutenfree', descending: true)
+          .snapshots();
+    } else {
+      return FirebaseFirestore.instance.collection('recipies').snapshots();
+    }
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -33,7 +64,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Searchbar code
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 10.0),
             TextField(
               decoration: InputDecoration(
                 filled: true,
@@ -51,13 +82,54 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             const SizedBox(
-              height: 20.0,
+              height: 10.0,
+            ),
+            Container(
+              height: 35,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.amber,
+                    ),
+                    onPressed: () => {setState(() => meal = !meal)},
+                    child: Text(meal ? 'Sorted' : 'Meal'),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.amber,
+                    ),
+                    onPressed: () => {setState(() => desert = !desert)},
+                    child: Text(desert ? "Sorted" : "Desert"),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.amber,
+                    ),
+                    onPressed: () => {setState(() => vegetarian = !vegetarian)},
+                    child: Text(vegetarian ? 'Sorted' : 'Vegetarian'),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.amber,
+                    ),
+                    onPressed: () => {setState(() => glutenFree = !glutenFree)},
+                    child: Text(glutenFree ? "Sorted" : "Gluten"),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 5.0,
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('recipies')
-                    .snapshots(),
+                stream: firebaseSorting(),
                 builder: (context, snapshots) {
                   return (snapshots.connectionState == ConnectionState.waiting)
                       ? const Center(
@@ -70,17 +142,13 @@ class _HomePageState extends State<HomePage> {
                                 as Map<String, dynamic>;
 
                             if (searchIndicator.isEmpty) {
-                              return RecipeCard(
-                                  title: '${data['name']}',
-                                  image: '${data['method']}');
+                              return RecipeCard(snapshots.data!.docs[index]);
                             }
                             if (data['name']
                                 .toString()
                                 .toLowerCase()
                                 .startsWith(searchIndicator.toLowerCase())) {
-                              return RecipeCard(
-                                  title: '${data['name']}',
-                                  image: '${data['method']}');
+                              return RecipeCard(snapshots.data!.docs[index]);
                             }
                             return Container();
                           },
