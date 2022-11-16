@@ -33,22 +33,22 @@ class _HomePageState extends State<HomePage> {
     if (vegetarian == true) {
       return FirebaseFirestore.instance
           .collection('recipies')
-          .orderBy('vegetarian', descending: true)
+          .where('vegetarian', isEqualTo: vegetarian)
           .snapshots();
     } else if (meal == true) {
       return FirebaseFirestore.instance
           .collection('recipies')
-          .orderBy('meal', descending: true)
+          .where('meal', isEqualTo: meal)
           .snapshots();
     } else if (desert == true) {
       return FirebaseFirestore.instance
           .collection('recipies')
-          .orderBy('desert', descending: true)
+          .where('desert', isEqualTo: desert)
           .snapshots();
     } else if (glutenFree == true) {
       return FirebaseFirestore.instance
           .collection('recipies')
-          .orderBy('glutenfree', descending: true)
+          .where('glutenfree', isEqualTo: glutenFree)
           .snapshots();
     } else {
       return FirebaseFirestore.instance.collection('recipies').snapshots();
@@ -94,7 +94,12 @@ class _HomePageState extends State<HomePage> {
                       primary: Colors.white,
                       backgroundColor: Colors.amber,
                     ),
-                    onPressed: () => {setState(() => meal = !meal)},
+                    onPressed: () => {
+                      if (vegetarian || glutenFree || desert == true)
+                        {null}
+                      else
+                        {setState(() => meal = !meal)},
+                    },
                     child: Text(meal ? 'Sorted' : 'Meal'),
                   ),
                   TextButton(
@@ -102,7 +107,12 @@ class _HomePageState extends State<HomePage> {
                       primary: Colors.white,
                       backgroundColor: Colors.amber,
                     ),
-                    onPressed: () => {setState(() => desert = !desert)},
+                    onPressed: () => {
+                      if (meal || vegetarian || glutenFree == true)
+                        {null}
+                      else
+                        {setState(() => desert = !desert)}
+                    },
                     child: Text(desert ? "Sorted" : "Desert"),
                   ),
                   TextButton(
@@ -110,7 +120,12 @@ class _HomePageState extends State<HomePage> {
                       primary: Colors.white,
                       backgroundColor: Colors.amber,
                     ),
-                    onPressed: () => {setState(() => vegetarian = !vegetarian)},
+                    onPressed: () => {
+                      if (meal || glutenFree || desert == true)
+                        {null}
+                      else
+                        {setState(() => vegetarian = !vegetarian)}
+                    },
                     child: Text(vegetarian ? 'Sorted' : 'Vegetarian'),
                   ),
                   TextButton(
@@ -118,7 +133,12 @@ class _HomePageState extends State<HomePage> {
                       primary: Colors.white,
                       backgroundColor: Colors.amber,
                     ),
-                    onPressed: () => {setState(() => glutenFree = !glutenFree)},
+                    onPressed: () => {
+                      if (desert || meal || vegetarian == true)
+                        {null}
+                      else
+                        {setState(() => glutenFree = !glutenFree)}
+                    },
                     child: Text(glutenFree ? "Sorted" : "Gluten"),
                   ),
                 ],

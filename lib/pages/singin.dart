@@ -37,6 +37,8 @@ class _SignInState extends State<SignIn> {
           email: _emailController.text.trim().toLowerCase(),
           password: _passwordController.text.trim());
       print("Successfully logged in ");
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
