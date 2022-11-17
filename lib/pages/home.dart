@@ -11,23 +11,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> recipeList = [];
+  //List<String> recipeList = [];
   String searchIndicator = "";
 
   bool meal = false;
   bool desert = false;
   bool vegetarian = false;
   bool glutenFree = false;
-
-/*   Future getRecipeList() async {
-    await FirebaseFirestore.instance.collection('recipies').get().then(
-          (snapshot) => snapshot.docs.forEach(
-            (document) {
-              recipeList.add(document.reference.id);
-            },
-          ),
-        );
-  } */
 
   firebaseSorting() {
     if (vegetarian == true) {
