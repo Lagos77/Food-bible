@@ -141,10 +141,14 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           RECIPE_USERID: userId,
           RECIPE_USERNAME: userName,
         })
+        /*
+         .then((value) => Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false))
+        .catchError((error) => print("Failed to add user: $error"));
+        */
         .then((value) =>
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Recipe added successfully!"),
-            )))
+            Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false))
         .catchError((error) =>
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("Failed to add recipe!"),
