@@ -11,23 +11,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> recipeList = [];
+  //List<String> recipeList = [];
   String searchIndicator = "";
 
   bool meal = false;
   bool desert = false;
   bool vegetarian = false;
   bool glutenFree = false;
-
-/*   Future getRecipeList() async {
-    await FirebaseFirestore.instance.collection('recipies').get().then(
-          (snapshot) => snapshot.docs.forEach(
-            (document) {
-              recipeList.add(document.reference.id);
-            },
-          ),
-        );
-  } */
 
   firebaseSorting() {
     if (vegetarian == true) {
@@ -100,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                       else
                         {setState(() => meal = !meal)},
                     },
-                    child: Text(meal ? 'Sorted' : 'Meal'),
+                    child: Text(meal ? 'Filtered' : 'Meal'),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
@@ -113,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                       else
                         {setState(() => desert = !desert)}
                     },
-                    child: Text(desert ? "Sorted" : "Desert"),
+                    child: Text(desert ? "Filtered" : "Desert"),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
@@ -126,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                       else
                         {setState(() => vegetarian = !vegetarian)}
                     },
-                    child: Text(vegetarian ? 'Sorted' : 'Vegetarian'),
+                    child: Text(vegetarian ? 'Filtered' : 'Vegetarian'),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
@@ -139,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                       else
                         {setState(() => glutenFree = !glutenFree)}
                     },
-                    child: Text(glutenFree ? "Sorted" : "Gluten"),
+                    child: Text(glutenFree ? "Filtered" : "Gluten"),
                   ),
                 ],
               ),

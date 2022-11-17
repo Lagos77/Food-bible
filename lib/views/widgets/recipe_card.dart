@@ -8,13 +8,6 @@ class RecipeCard extends StatelessWidget {
 
   RecipeCard(this.documentId);
 
-  /* final String title;
-  final String image;
-  final String documentId; */
-
-/*   RecipeCard(
-      {required this.title, required this.image, required this.documentId}); */
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
