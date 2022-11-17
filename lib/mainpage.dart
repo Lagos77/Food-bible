@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foodbible/pages/create_recipe.dart';
 import 'package:foodbible/pages/favorites.dart';
 import 'package:foodbible/pages/home.dart';
@@ -25,6 +26,12 @@ class _MainPageState extends State<MainPage> {
 
   Future<void> signOutEmail() async {
     await FirebaseAuth.instance.signOut();
+    Fluttertoast.showToast(
+        msg: "Logged out successfully!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black,
+        textColor: Colors.white);
   }
 
   @override

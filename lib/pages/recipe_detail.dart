@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foodbible/models/recipe.dart';
 
 class RecipeDetail extends StatelessWidget {
@@ -32,8 +33,18 @@ class RecipeDetail extends StatelessWidget {
         .update({
           'favorites': FieldValue.arrayUnion([documentId.reference.id])
         })
-        .then((value) => print("User Updated"))
-        .catchError((error) => print("Failed to update user: $error"));
+        .then((value) => Fluttertoast.showToast(
+            msg: "Recipe added to favorites!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.black,
+            textColor: Colors.white))
+        .catchError((error) => Fluttertoast.showToast(
+            msg: "Recipe NOT added to favorites!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.black,
+            textColor: Colors.white));
   }
 
   @override

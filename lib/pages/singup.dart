@@ -66,7 +66,8 @@ class _SignUpState extends State<SignUp> {
           'userName': _userNameController.text.trim(),
           'favorites': []
         })
-        .then((value) => print("User Added"))
+        .then((value) => Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false))
         .catchError((error) => print("Failed to add user: $error"));
   }
 
