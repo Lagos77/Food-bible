@@ -141,10 +141,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           RECIPE_USERID: userId,
           RECIPE_USERNAME: userName,
         })
-        .then((value) =>
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Recipe added successfully!"),
-            )))
+        /*
+         .then((value) => Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false))
+        .catchError((error) => print("Failed to add user: $error"));
+        */
+        .then((value) => Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false))
         .catchError((error) =>
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("Failed to add recipe!"),
@@ -185,8 +188,23 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   Widget build(BuildContext context) {
     return !checkifLoggedin()
         ? Column(
-            children: const [
-              Text("You need to log in to create a recipe"),
+            children: [
+              const Padding(padding: EdgeInsets.only(bottom: 30)),
+              const SizedBox(height: 3),
+              Ink.image(
+                image: const NetworkImage(
+                    'https://firebasestorage.googleapis.com/v0/b/foodbible-c4c31.appspot.com/o/21014-Good-old-Fashioned-Pancakes-mfs_001-1fa26bcdedc345f182537d95b6cf92d8.jpeg?alt=media&token=174fce35-01b5-41ee-8241-8664358ea2d3'),
+                height: 300,
+                fit: BoxFit.cover,
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 30)),
+              const Text(" You need to log in to see your favorites",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                    //fontFamily:  ,
+                  )),
             ],
           )
         : SingleChildScrollView(
