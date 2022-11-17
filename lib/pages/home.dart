@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                       else
                         {setState(() => meal = !meal)},
                     },
-                    child: Text(meal ? 'Sorted' : 'Meal'),
+                    child: Text(meal ? 'Filtered' : 'Meal'),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                       else
                         {setState(() => desert = !desert)}
                     },
-                    child: Text(desert ? "Sorted" : "Desert"),
+                    child: Text(desert ? "Filtered" : "Desert"),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                       else
                         {setState(() => vegetarian = !vegetarian)}
                     },
-                    child: Text(vegetarian ? 'Sorted' : 'Vegetarian'),
+                    child: Text(vegetarian ? 'Filtered' : 'Vegetarian'),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                       else
                         {setState(() => glutenFree = !glutenFree)}
                     },
-                    child: Text(glutenFree ? "Sorted" : "Gluten"),
+                    child: Text(glutenFree ? "Filtered" : "Gluten"),
                   ),
                 ],
               ),
