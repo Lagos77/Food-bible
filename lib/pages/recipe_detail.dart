@@ -6,27 +6,25 @@ import 'package:foodbible/models/recipe.dart';
 
 class RecipeDetail extends StatelessWidget {
   var documentId;
-
   RecipeDetail(this.documentId);
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   final toBeUsed = FirebaseAuth.instance.currentUser?.uid;
 
-  bool checkifLoggedin() {
+  bool checkIfLoggedIn() {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       return true;
     }
     return false;
   }
 
-  Future<void> AddtoFavorites() {
+  Future<void> addFavorites() {
     var uid = "";
     var currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       uid = currentUser.uid;
     }
-
     return FirebaseFirestore.instance
         .collection('users')
         .doc('${uid}')
@@ -52,34 +50,16 @@ class RecipeDetail extends StatelessWidget {
     var ingredientsList = documentId['ingredients'];
     return Scaffold(
       appBar: AppBar(
-          centerTitle: true,
-          title: const Text("Recipe Details"),
-          elevation: 0,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back),
-          ),
-          actions: checkifLoggedin()
-              ? <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: GestureDetector(
-                      onTap: AddtoFavorites,
-                      child: const Icon(
-                        Icons.favorite_border_outlined,
-                        size: 26,
-                      ),
-                    ),
-                  )
-                ]
-              : <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: GestureDetector(child: Text("")),
-                  )
-                ]),
+        centerTitle: true,
+        title: const Text("Recipe Details"),
+        elevation: 0,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(Icons.arrow_back),
+        ),
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
@@ -165,13 +145,19 @@ class RecipeDetail extends StatelessWidget {
                   const SizedBox(height: 5),
                   Row(
                     children: [
-                      Text(
-                        '${documentId["description"]}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
+                      Flexible(
+                        child: Container(
+                          padding: EdgeInsets.only(right: 13.0),
+                          child: Text(
+                            '${documentId["description"]}',
+                            maxLines: 20,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -194,7 +180,7 @@ class RecipeDetail extends StatelessWidget {
                           Icons.circle,
                           size: 7.0,
                         ),
-                        SizedBox(width: 5),
+                        const SizedBox(width: 5),
                         Text(ingredientsList[index].toString()),
                       ]);
                     },
@@ -220,6 +206,30 @@ class RecipeDetail extends StatelessWidget {
                           : ""),
                       Text(
                           documentId["vegetarian"] ? "This is vegetarian" : ""),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      checkIfLoggedIn()
+                          ? Container(
+                              width: 100,
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                    primary: Colors.white,
+                                    backgroundColor: Colors.red),
+                                onPressed: addFavorites,
+                                child: Row(
+                                  children: const [
+                                    Text("Favorite"),
+                                    SizedBox(width: 5),
+                                    Icon(Icons.favorite, size: 17),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Container(),
                     ],
                   )
                 ],
