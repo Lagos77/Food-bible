@@ -26,27 +26,25 @@ class _FavoritesState extends State<Favorites> {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   List favList = [];
 
-  bool checkifLoggedin() {
+  bool currentUser() {
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       return true;
     }
     return false;
   }
 
-  //var favList = [];
-
-  Future<List> getFavList() async {
-    // var collection = FirebaseFirestore.instance.collection('users');
-    var docSnapshot =
+  Future getFavList() async {
+    var userSelect =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
-
-    favList = docSnapshot.data()?['favorites'];
+    setState(() {
+      favList = userSelect.data()?['favorites'];
+    });
     return favList;
   }
 
   @override
   Widget build(BuildContext context) {
-    return !checkifLoggedin()
+    return !currentUser()
         ? Column(
             children: [
               const Padding(padding: EdgeInsets.only(bottom: 30)),
@@ -58,13 +56,14 @@ class _FavoritesState extends State<Favorites> {
                 fit: BoxFit.cover,
               ),
               const Padding(padding: EdgeInsets.only(bottom: 30)),
-              Text(" You need to log in to see your favorites",
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                    //fontFamily:  ,
-                  )),
+              const Text(
+                " You need to log in to see your favorites",
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ],
           )
         : Scaffold(
@@ -73,8 +72,6 @@ class _FavoritesState extends State<Favorites> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //Searchbar code
-
                   Expanded(
                     child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
@@ -87,13 +84,15 @@ class _FavoritesState extends State<Favorites> {
                                 child: CircularProgressIndicator(),
                               )
                             : ListView.builder(
-                                itemCount: snapshots.data!.docs.length,
+                                itemCount: favList.length,
                                 itemBuilder: (context, index) {
                                   var data = snapshots.data!.docs[index].data()
                                       as Map<String, dynamic>;
 
                                   if (favList.isEmpty) {
-                                    print("Listi s empty");
+                                    setState(() {
+                                      favList;
+                                    });
                                   }
                                   if (favList.contains(snapshots
                                       .data!.docs[index].reference.id)) {
