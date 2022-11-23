@@ -34,11 +34,16 @@ class _FavoritesState extends State<Favorites> {
   }
 
   Future getFavList() async {
-    var userSelect =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    setState(() {
-      favList = userSelect.data()?['favorites'];
-    });
+    if (currentUser()) {
+      var userSelect = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      setState(() {
+        favList = userSelect.data()?['favorites'];
+      });
+    }
+
     return favList;
   }
 
