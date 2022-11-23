@@ -145,13 +145,19 @@ class RecipeDetail extends StatelessWidget {
                   const SizedBox(height: 5),
                   Row(
                     children: [
-                      Text(
-                        '${documentId["description"]}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
+                      Flexible(
+                        child: Container(
+                          padding: EdgeInsets.only(right: 13.0),
+                          child: Text(
+                            '${documentId["description"]}',
+                            maxLines: 20,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                   const SizedBox(height: 10),
